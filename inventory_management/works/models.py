@@ -1,15 +1,14 @@
 from django.db import models
+from django.forms import ModelForm
 
-class Melt(models.Model):
-	code 		= models.CharField(max_length=200, null=True, blank=True)
+class Work(models.Model):
+	code 		= models.CharField(max_length=200, unique=True)
+	name 		= models.CharField(max_length=200)
 	amount 		= models.IntegerField()
 	date_added	= models.DateTimeField(auto_now_add=True)
 
-
-class Assembly(models.Model):
-	code 		= models.CharField(max_length=200, null=True, blank=True)
-	amount 		= models.IntegerField()
-	date_added	= models.DateTimeField(auto_now_add=True)
+	def __str__(self):
+		return 'Code: ' + self.code + ', Name: ' + self.name
 
 
 class Challan(models.Model):
@@ -21,3 +20,8 @@ class Challan(models.Model):
 class Report(models.Model):
 	invoice_of 	= models.CharField(max_length=200, null=True, blank=True)
 	challan 	= models.OneToOneField(Challan, null=True,blank=True, on_delete=models.CASCADE)
+
+class AddWorkForm(ModelForm):
+	class Meta:
+		model  = Work
+		fields = ['code', 'name', 'amount']

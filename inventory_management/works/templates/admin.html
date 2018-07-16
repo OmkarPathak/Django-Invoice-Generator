@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="float-left" style="margin-top: 2%">
+            <h1>Add/ Edit Works</h1>
+            <hr style="border: 2px solid rgb(85, 85, 224); max-width: 50px;" align="left">
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        {% include 'messages.html' %}
+        <div style="margin-top: 2%">
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            {% for field in form %}
+                {% if field.errors %}
+                <div class="alert alert-danger">
+                    {{ field.errors.as_text }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+            {% for field in form.visible_fields %}
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        {{ field|as_crispy_field }}
+                        {{ field.help_text }}
+                    </div>
+            {% endfor %}
+            </div>
+            <input type="submit" class="btn btn-primary" value="Add" />
+        </form>
+    </div>
+</div>
+
+{% if works %}
+<div class="row">
+    <table class="table text-center table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Code</th>
+            <th scope="col">Name</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody style="background-color: white">
+            {% for work in works %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ work.code }}</td>
+                <td>{{ work.name }}</td>
+                <td>{{ work.amount }}</td>
+                <td>
+                    <a class="btn btn-primary open-modal" data-url="{% url 'admin_edit' id=work.id %}" style="color: white">Edit</a>
+                </td>
+                <td><a href="{% url 'admin_delete' id=work.id %}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>      
+</div>
+{% endif %}
+
+<div class="modal-div"></div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var modalDiv = $(".modal-div");
+    $(".open-modal").on("click", function() {
+    // alert($(this).attr("data-url"));
+    $.ajax({
+        type: 'GET',
+        url: $(this).attr("data-url"),
+        success: function(data) {
+        modalDiv.html(data);
+        // alert('yes');
+        $(".modal").modal();
+        }
+    });
+    });
+</script>
+{% endblock %}
