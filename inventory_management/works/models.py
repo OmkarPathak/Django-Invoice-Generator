@@ -4,7 +4,7 @@ from django.forms import ModelForm
 class Work(models.Model):
 	code 		= models.CharField(max_length=200, unique=True)
 	name 		= models.CharField(max_length=200)
-	amount 		= models.IntegerField()
+	amount 		= models.FloatField()
 	date_added	= models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
@@ -13,9 +13,12 @@ class Work(models.Model):
 
 class Challan(models.Model):
 	date_added	= models.DateTimeField(auto_now_add=True)
-	cgst		= models.IntegerField()
-	sgst		= models.IntegerField()
-	amount 		= models.IntegerField()
+	cgst		= models.FloatField()
+	sgst		= models.FloatField()
+	amount 		= models.FloatField()
+
+class ChallanNumber(models.Model):
+	challan_number = models.IntegerField()
 
 class Report(models.Model):
 	invoice_of 	= models.CharField(max_length=200, null=True, blank=True)

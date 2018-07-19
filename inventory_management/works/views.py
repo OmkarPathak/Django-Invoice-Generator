@@ -6,6 +6,7 @@ from django.http import JsonResponse, HttpResponse
 from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+import time
 
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
@@ -35,9 +36,9 @@ def get_pdf(request):
     pdf = render_to_pdf('pdf/invoice_generator.html', request.session['context'])
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_%s.pdf" %("12341231")
-        content = "inline; filename='%s'" %(filename)
-        content = "attachment; filename='%s'" %(filename)
+        filename = "Invoice_{}.pdf".format(time.strftime("%Y%m%d"))
+        content = "inline; filename='{}'".format(filename)
+        content = "attachment; filename='{}'".format(filename)
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Not found")

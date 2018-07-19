@@ -10,7 +10,7 @@ table, th, td {
     border-collapse: collapse;
 }
 th, td {
-    padding: 15px;
+    padding: 10px;
     text-align: left;
    
 }
@@ -35,16 +35,16 @@ body{
 <table id="t01">
 
  <tr id="table-heading">
-    <th colspan="5" style="text-align: center; background-color: black; color: white;">
+    <th colspan="5" style="text-align: center; background-color: black; color: white; padding: 0px">
        <div>
-        <h1>Vaibhav Engineering works</h1>
-        <h2>Sr.no.51, Pune, Warje-Malwadi</h2>
+        <h1 style="padding-top: 15px">Vaibhav Engineering works</h1>
+        <h2 style="padding-bottom: 10px">Sr.no.51, Pune, Warje-Malwadi</h2>
        </div>
     </th>
  </tr>
 
   <tr>
-    <td colspan = "3"><b>To,M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA</td>
+    <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA</td>
     <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G</td>
   </tr> 
 
@@ -56,13 +56,13 @@ body{
   <tr>
     <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Particular</th> 
     <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Weight(kg)</th>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Qty</th>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Quantity</th>
     <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Rate</th> 
     <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Amount</th>
   </tr>
 
   <tr>
-    <td>{{ vendor_name1 }}</td>     
+    <td>{{ code1 }}<br>{{ vendor_name1 }}</td>     
     <td>{{ weight1 }}</td>
     <td>{{ quantity1 }}</td>
     <td>{{ rate1 }}</td>
@@ -70,7 +70,7 @@ body{
   </tr>
 
   <tr>
-    <td>{{ vendor_name2 }}</td>     
+    <td>{{ code2 }}<br>{{ vendor_name2 }}</td>     
     <td>{{ weight2 }}</td>
     <td>{{ quantity2 }}</td>
     <td>{{ rate2 }}</td>
@@ -78,7 +78,7 @@ body{
   </tr>
 
   <tr>  
-    <td>{{ vendor_name3 }}</td>     
+    <td>{{ code3 }}<br>{{ vendor_name3 }}</td>     
     <td>{{ weight3 }}</td>
     <td>{{ quantity3 }}</td>
     <td>{{ rate3 }}</td>
@@ -88,23 +88,27 @@ body{
 <tr>
   <td colspan="2" rowspan="2"><b>Drg No.:</b> {{ drg_number }}<br>
   <b>Melt No.: </b> {{ melt_number }}</td>
-  <td colspan="2">Total</td>
+  <td colspan="2" style="text-align: right"><b>Total:</b></td>
   <td>{{ total }}</td>
 </tr>
  
 <tr>
-   <td colspan="2"><b>CGST.: </b>{{ cgst }} <br><b>SGST.:</b> {{ sgst }}</td>
-   <td>vvqv</td>
+   <td colspan="2" style="text-align: right"><b>CGST: </b>{{ cgst }} %<br><b>SGST:</b> {{ sgst }} %</td>
+   <td>
+      {{ cgst_amount }}<br>
+      {{ sgst_amount }}
+   </td>
 </tr>
 
 <tr>
-  <td colspan="2"> Total Weight :<INPUT TYPE="number" NAME="total-weight" SIZE="20"></td>
-  <td colspan="3"> <b>Grand Total :</b> {{ grand_total }}</td>
+  <td colspan="2"> <b>Total Weight :</b> {{ total_weight }}</td>
+  <td colspan="2" style="text-align: right"> <b>Grand Total :</b></td>
+  <td>{{ grand_total }}</td>
 </tr>
 
 <tr>
   <td colspan="2"></td>
-  <td colspan="3">Signature:</td>
+  <td colspan="3"><b>Signature:</b></td>
 </tr>
 </table>
 <br>

@@ -71,12 +71,12 @@
                         <h5 class="value1" style="margin-top: 10%; margin-bottom: 0"></h5>
                     </div>
                 </td>            
-                <td><INPUT class="form-control" TYPE="number" NAME="weight1" placeholder="weight"></td>
-                <td><INPUT class="form-control" TYPE="number" NAME="quantity1" placeholder="quantity"></td>
+                <td><INPUT class="form-control" TYPE="number" NAME="weight1" placeholder="Weight"></td>
+                <td><INPUT class="form-control" TYPE="number" NAME="quantity1" placeholder="Quantity"></td>
                 <td>
                     <div><h5 class="amount1"></h5></div>
                 </td>
-                <td><INPUT class="form-control" TYPE="number" NAME="amount1" placeholder="amount"></td>
+                <td><INPUT class="form-control" TYPE="number" NAME="amount1" placeholder="Amount"></td>
             </tr>
             
             <tr class="text-center">
@@ -91,12 +91,12 @@
                             <h5 class="value2" style="margin-top: 10%; margin-bottom: 0"></h5>
                         </div>
                     </td>            
-                    <td><INPUT class="form-control" TYPE="number" NAME="weight2" placeholder="weight"></td>
-                    <td><INPUT class="form-control" TYPE="number" NAME="quantity2" placeholder="quantity"></td>
+                    <td><INPUT class="form-control" TYPE="number" NAME="weight2" placeholder="Weight"></td>
+                    <td><INPUT class="form-control" TYPE="number" NAME="quantity2" placeholder="Quantity"></td>
                     <td>
                         <div><h5 class="amount2"></h5></div>
                     </td>
-                    <td><INPUT class="form-control" TYPE="number" NAME="amount2" placeholder="amount"></td>
+                    <td><INPUT class="form-control" TYPE="number" NAME="amount2" placeholder="Amount"></td>
                 </tr>
             
                 <tr class="text-center">
@@ -111,12 +111,12 @@
                                 <h5 class="value3" style="margin-top: 10%; margin-bottom: 0"></h5>
                             </div>
                         </td>            
-                        <td><INPUT class="form-control" TYPE="number" NAME="weight3" placeholder="weight"></td>
-                        <td><INPUT class="form-control" TYPE="number" NAME="quantity3" placeholder="quantity"></td>
+                        <td><INPUT class="form-control" TYPE="number" NAME="weight3" placeholder="Weight"></td>
+                        <td><INPUT class="form-control" TYPE="number" NAME="quantity3" placeholder="Quantity"></td>
                         <td>
                             <div><h5 class="amount3"></h5></div>
                         </td>
-                        <td><INPUT class="form-control" TYPE="number" NAME="amount3" placeholder="amount"></td>
+                        <td><INPUT class="form-control" TYPE="number" NAME="amount3" placeholder="Amount"></td>
                     </tr>
             
             <tr>
@@ -145,7 +145,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">CGST</span>
                         </div>
-                        <INPUT class="form-control" TYPE="number" NAME="cgst">
+                        <INPUT class="form-control" TYPE="number" NAME="cgst" placeholder="CGST">
                         <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon1">%</span>
                         </div>
@@ -154,24 +154,31 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">SGST</span>
                         </div>
-                        <INPUT class="form-control" TYPE="number" NAME="sgst">
+                        <INPUT class="form-control" TYPE="number" NAME="sgst" placeholder="SGST">
                         <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon1">%</span>
                         </div>
                     </div>    
                 </td>
-                <td></td>
+                <td>
+                    <div>
+                        <INPUT class="form-control" TYPE="number" NAME="cgst-amount" placeholder="CGST Amount">
+                    </div>
+                    <div style="margin-top: 2%">
+                        <INPUT class="form-control" TYPE="number" NAME="sgst-amount" placeholder="SGST Amount">
+                    </div>
+                </td>
             </tr>
             
             <tr>
                 <td colspan="2">
                     <div class="input-group">
-                        <b>Total Weight</b> :<INPUT style="margin-left: 2%" TYPE="number" NAME="total-weight" class="form-control">
+                        <b>Total Weight</b> :<INPUT style="margin-left: 2%" TYPE="number" NAME="total-weight" class="form-control" placeholder="Total Weight">
                     </div>
                 </td>
                 <td colspan="3">
                     <div class="input-group">
-                        <b>Grand Total</b> :<INPUT style="margin-left: 2%" class="form-control" TYPE="number" NAME="grand-total">
+                        <b>Grand Total</b> :<INPUT style="margin-left: 2%" class="form-control" TYPE="number" NAME="grand-total" placeholder="Grand Total">
                     </div>
                 </td>
             </tr>
@@ -183,15 +190,24 @@
     </tbody>
 
 </table>
-<div class="row text-center">
-    <div class="col">
-        <div class="btn btn-dark" id="download">Download</div>
+<div class="container" style="margin-bottom: 3%">
+    <div class="row text-center">
+        <div class="col">
+            <div class="btn btn-group">
+                <div class="btn btn-success" id="download">Download</div>
+                <div class="btn btn-warning" id="clear">Clear</div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block javascript %}
 <script>
+    $("#clear").on("click", function(){
+        $("input").val('');
+    });
+
     // For first work
     $("#get_code_values1").on("change", function(){
         var selectedValue = $(this).val();
@@ -202,7 +218,7 @@
             dataType : "json",
             success : function(data){
                 // alert(data.name);
-                $('.value1').text('Name: ' + data.name);
+                $('.value1').text(data.name);
                 $('.amount1').text(data.amount);
             }
         });
@@ -227,7 +243,7 @@
             dataType : "json",
             success : function(data){
                 // alert(data.name);
-                $('.value2').text('Name: ' + data.name);
+                $('.value2').text(data.name);
                 $('.amount2').text(data.amount);
             }
         });
@@ -253,7 +269,7 @@
             dataType : "json",
             success : function(data){
                 // alert(data.name);
-                $('.value3').text('Name: ' + data.name);
+                $('.value3').text(data.name);
                 $('.amount3').text(data.amount);
             }
         });
@@ -278,13 +294,33 @@
             $("input[name=total]").val(parseInt(a1) + parseInt(a2) + parseInt(a3));
         }
         get_grand_total();
+        get_total_weight();
+    }
+
+    function get_total_weight(){
+        if ($("input[name=weight1").val() && $("input[name=weight2").val() && $("input[name=weight3").val())
+        {
+            var w1 = $("input[name=weight1").val();
+            var w2 = $("input[name=weight2").val();
+            var w3 = $("input[name=weight3").val();
+
+            $("input[name=total-weight]").val(parseFloat(w1) + parseFloat(w2) + parseFloat(w3));
+        }
     }
 
     $("input[name=cgst]").on("keyup", function(){
+        var cgst = $("input[name=cgst]").val();
+        var total = $("input[name=total]").val();
+        var cgst_amount = (parseFloat(cgst) / 100) * parseFloat(total);
+        $("input[name=cgst-amount]").val(cgst_amount);
         get_grand_total();
     });
 
     $("input[name=sgst]").on("keyup", function(){
+        var sgst = $("input[name=sgst]").val();
+        var total = $("input[name=total]").val();
+        var sgst_amount = (parseFloat(sgst) / 100) * parseFloat(total);
+        $("input[name=sgst-amount]").val(sgst_amount);
         get_grand_total();
     });
 
@@ -306,16 +342,19 @@
                 "date"              : $("#date").val(),
                 "po_number"         : $("input[name=po-no]").val(),
                 "jc_number"         : $("input[name=jc-no]").val(),
+                "code1"             : $("#get_code_values1 option:selected").val(),
                 "vendor_name1"      : $(".value1").text(),
                 "rate1"             : $(".amount1").text(),
                 "amount1"           : $("input[name=amount1]").val(),
                 "quantity1"         : $("input[name=quantity1]").val(),
                 "weight1"           : $("input[name=weight1]").val(),
+                "code2"             : $("#get_code_values2 option:selected").val(),
                 "vendor_name2"      : $(".value2").text(),
                 "rate2"             : $(".amount2").text(),
                 "amount2"           : $("input[name=amount2]").val(),
                 "quantity2"         : $("input[name=quantity2]").val(),
                 "weight2"           : $("input[name=weight2]").val(),
+                "code3"             : $("#get_code_values3 option:selected").val(),
                 "vendor_name3"      : $(".value3").text(),
                 "rate3"             : $(".amount3").text(),
                 "amount3"           : $("input[name=amount3]").val(),
@@ -324,9 +363,12 @@
                 "drg_number"        : $("input[name=drg-no]").val(),
                 "melt_number"       : $("input[name=melt-no]").val(),
                 "cgst"              : $("input[name=cgst]").val(),
+                "cgst_amount"       : $("input[name=cgst-amount]").val(),
                 "sgst"              : $("input[name=sgst]").val(),
+                "sgst_amount"       : $("input[name=sgst-amount]").val(),
                 "total"             : $("input[name=total]").val(),
                 "grand_total"       : $("input[name=grand-total]").val(),
+                "total_weight"      : $("input[name=total-weight]").val()
             },
             dataType : "json",
             success : function(data){
