@@ -2,3 +2,7 @@
     color: red;
     padding-left: 2px;
 }
+
+.table td{
+    vertical-align: middle !important;
+}

@@ -6,8 +6,11 @@ name = "pypi"
 [packages]
 django = "*"
 django-crispy-forms = "*"
+"xhtml2pdf" = "*"
+django-easy-pdf = "*"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.6"

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+    width:100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 15px;
+    text-align: left;
+   
+}
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color: #fff;
+}
+table#t01 th {
+    background-color: black;
+    color: white;
+}
+body{
+    font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+
+<table id="t01">
+
+ <tr id="table-heading">
+    <th colspan="5" style="text-align: center; background-color: black; color: white;">
+       <div>
+        <h1>Vaibhav Engineering works</h1>
+        <h2>Sr.no.51, Pune, Warje-Malwadi</h2>
+       </div>
+    </th>
+ </tr>
+
+  <tr>
+    <td colspan = "3"><b>To,M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA</td>
+    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G</td>
+  </tr> 
+
+  <tr>
+    <td colspan = "3"><b>Challan No :</b>{{ challan_number }} <b>Date :</b> {{ date }} <br> <b>Vendor No :</b> V0113</td>
+    <td colspan = "2"><b>PO No :</b> {{ po_number }} <br><b>JC No :</b> {{ jc_number }} </td>
+  </tr>
+
+  <tr>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Particular</th> 
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Weight(kg)</th>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Qty</th>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Rate</th> 
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Amount</th>
+  </tr>
+
+  <tr>
+    <td>{{ vendor_name1 }}</td>     
+    <td>{{ weight1 }}</td>
+    <td>{{ quantity1 }}</td>
+    <td>{{ rate1 }}</td>
+    <td>{{ amount1 }}</td>
+  </tr>
+
+  <tr>
+    <td>{{ vendor_name2 }}</td>     
+    <td>{{ weight2 }}</td>
+    <td>{{ quantity2 }}</td>
+    <td>{{ rate2 }}</td>
+    <td>{{ amount2 }}</td>
+  </tr>
+
+  <tr>  
+    <td>{{ vendor_name3 }}</td>     
+    <td>{{ weight3 }}</td>
+    <td>{{ quantity3 }}</td>
+    <td>{{ rate3 }}</td>
+    <td>{{ amount3 }}</td>
+  </tr>
+
+<tr>
+  <td colspan="2" rowspan="2"><b>Drg No.:</b> {{ drg_number }}<br>
+  <b>Melt No.: </b> {{ melt_number }}</td>
+  <td colspan="2">Total</td>
+  <td>{{ total }}</td>
+</tr>
+ 
+<tr>
+   <td colspan="2"><b>CGST.: </b>{{ cgst }} <br><b>SGST.:</b> {{ sgst }}</td>
+   <td>vvqv</td>
+</tr>
+
+<tr>
+  <td colspan="2"> Total Weight :<INPUT TYPE="number" NAME="total-weight" SIZE="20"></td>
+  <td colspan="3"> <b>Grand Total :</b> {{ grand_total }}</td>
+</tr>
+
+<tr>
+  <td colspan="2"></td>
+  <td colspan="3">Signature:</td>
+</tr>
+</table>
+<br>
+
+
+
+</body>
+</html>

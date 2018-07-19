@@ -17,6 +17,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('invoice/', views.invoice_generator, name='invoice_generator'),
+    path('invoice/get/', views.get_code_values, name='get_code_values'),
+    path('invoice/pdf/', views.generate_pdf, name='generate_pdf'),
+    path('get/pdf/', views.get_pdf, name='get_pdf'),
     path('admin/', views.admin, name='admin'),
     path('admin/edit/<id>/', views.admin_edit, name='admin_edit'),
     path('admin/delete/<id>/', views.admin_delete, name='admin_delete'),
