@@ -59,9 +59,9 @@
                 <th>Amount</th>
             </tr>
             
-            <tr class="text-center">
+            <tr class="text-center" id="after-this1">
                 <td>
-                    <select id="get_code_values1" class="form-control">
+                    <select id="get_code_values" class="form-control" data-id="1">
                         <option value="%">Select Code</option>
                         {% for work in works %} 
                          <option value="{{ work.code }}">{{ work.code }}</option>
@@ -76,48 +76,11 @@
                 <td>
                     <div><h5 class="amount1"></h5></div>
                 </td>
-                <td><INPUT class="form-control" TYPE="number" NAME="amount1" placeholder="Amount"></td>
+                <td class="input-group">
+                    <INPUT class="form-control" TYPE="number" NAME="amount1" placeholder="Amount">
+                    <button class="btn btn-primary" id="add-row1" onclick="addrow(1)">Add row</button>
+                </td>
             </tr>
-            
-            <tr class="text-center">
-                    <td>
-                        <select id="get_code_values2" class="form-control">
-                            <option value="%">Select Code</option>
-                            {% for work in works %} 
-                             <option value="{{ work.code }}">{{ work.code }}</option>
-                            {% endfor %}
-                        </select>
-                        <div class="float-left">
-                            <h5 class="value2" style="margin-top: 10%; margin-bottom: 0"></h5>
-                        </div>
-                    </td>            
-                    <td><INPUT class="form-control" TYPE="number" NAME="weight2" placeholder="Weight"></td>
-                    <td><INPUT class="form-control" TYPE="number" NAME="quantity2" placeholder="Quantity"></td>
-                    <td>
-                        <div><h5 class="amount2"></h5></div>
-                    </td>
-                    <td><INPUT class="form-control" TYPE="number" NAME="amount2" placeholder="Amount"></td>
-                </tr>
-            
-                <tr class="text-center">
-                        <td>
-                            <select id="get_code_values3" class="form-control">
-                                <option value="%">Select Code</option>
-                                {% for work in works %} 
-                                 <option value="{{ work.code }}">{{ work.code }}</option>
-                                {% endfor %}
-                            </select>
-                            <div class="float-left">
-                                <h5 class="value3" style="margin-top: 10%; margin-bottom: 0"></h5>
-                            </div>
-                        </td>            
-                        <td><INPUT class="form-control" TYPE="number" NAME="weight3" placeholder="Weight"></td>
-                        <td><INPUT class="form-control" TYPE="number" NAME="quantity3" placeholder="Quantity"></td>
-                        <td>
-                            <div><h5 class="amount3"></h5></div>
-                        </td>
-                        <td><INPUT class="form-control" TYPE="number" NAME="amount3" placeholder="Amount"></td>
-                    </tr>
             
             <tr>
                 <td colspan="2" rowspan="2">
@@ -194,7 +157,7 @@
     <div class="row text-center">
         <div class="col">
             <div class="btn btn-group">
-                <div class="btn btn-success" id="download">Download</div>
+                <div class="btn btn-success" id="download" data-id="">Download</div>
                 <div class="btn btn-warning" id="clear">Clear</div>
             </div>
         </div>
@@ -204,13 +167,48 @@
 
 {% block javascript %}
 <script>
+    // to add new row to table
+    function addrow(id){
+        id += 1;
+        var markup = `
+            <tr class="text-center" id="after-this` + id + `">
+                <td>
+                    <select id="get_code_values" class="form-control" data-id="` + id + `">
+                        <option value="%">Select Code</option>
+                        {% for work in works %}
+                         <option value="{{ work.code }}">{{ work.code }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="float-left">
+                        <h5 class="value` + id + `" style="margin-top: 10%; margin-bottom: 0"></h5>
+                    </div>
+                </td>
+                <td><INPUT class="form-control" TYPE="number" NAME="weight` + id + `" placeholder="Weight"></td>
+                <td><INPUT class="form-control" TYPE="number" NAME="quantity` + id + `" placeholder="Quantity"></td>
+                <td>
+                    <div><h5 class="amount` + id + `"></h5></div>
+                </td>
+                <td class="input-group">
+                    <INPUT class="form-control" TYPE="number" NAME="amount` + id + `" placeholder="Amount">
+                    <button class="btn btn-primary" id="add-row` + id + `" onclick="addrow(` + id + `)">Add row</button>
+                </td>
+            </tr>
+        `;
+        $("table tbody #after-this" + (id - 1)).after(markup);
+        $("#add-row" + (id - 1)).hide();
+    }
+
     $("#clear").on("click", function(){
         $("input").val('');
     });
 
-    // For first work
-    $("#get_code_values1").on("change", function(){
+    $(document).on("change", "#get_code_values", function(){
+        var id = $(this).attr("data-id");
         var selectedValue = $(this).val();
+        get_value(id, selectedValue);
+    });
+
+    function get_value(id, selectedValue){
         $.ajax({
             url : "{% url 'get_code_values' %}",
             type : "GET",
@@ -218,110 +216,56 @@
             dataType : "json",
             success : function(data){
                 // alert(data.name);
-                $('.value1').text(data.name);
-                $('.amount1').text(data.amount);
+                $('.value' + id).text(data.name);
+                $('.amount' + id).text(data.amount);
             }
         });
-    });
 
-    $("input[name=quantity1]").on("keyup", function(){
-        var quantity = $(this).val();
-        var weight = $("#weight1").val();
-        var amount = $(".amount1").text();
-        $("input[name=amount1]").val(amount * quantity);
+        $("input[name=quantity" + id + "]").on("keyup", function(){
+            var quantity = $(this).val();
+            var weight = $("#weight" + id).val();
+            var amount = $(".amount" + id).text();
+            $("input[name=amount"  + id + "]").val(amount * quantity);
 
-        get_total();
-    });
-
-    // For second work
-    $("#get_code_values2").on("change", function(){
-        var selectedValue = $(this).val();
-        $.ajax({
-            url : "{% url 'get_code_values' %}",
-            type : "GET",
-            data : {"code" : selectedValue},
-            dataType : "json",
-            success : function(data){
-                // alert(data.name);
-                $('.value2').text(data.name);
-                $('.amount2').text(data.amount);
-            }
+            get_total(id);
         });
-    });
+    }
 
-    $("input[name=quantity2]").on("keyup", function(){
-        var quantity = $(this).val();
-        var weight = $("#weight2").val();
-        var amount = $(".amount2").text();
-        $("input[name=amount2").val(amount * quantity);
-
-        get_total();
-    });
-
-
-    // For third work
-    $("#get_code_values3").on("change", function(){
-        var selectedValue = $(this).val();
-        $.ajax({
-            url : "{% url 'get_code_values' %}",
-            type : "GET",
-            data : {"code" : selectedValue},
-            dataType : "json",
-            success : function(data){
-                // alert(data.name);
-                $('.value3').text(data.name);
-                $('.amount3').text(data.amount);
+    function get_total(id){
+        var total = 0;
+        for (i = 1; i <= parseInt(id); i++){
+            if($("input[name=amount" + i + "]").val()){
+                total += parseFloat($("input[name=amount" + i + "]").val());
             }
-        });
-    });
+            else{
+                total += 0;
+            }
+        }
+        $("input[name=total]").val(total);
+        get_total_weight(id);
+    }
 
-    $("input[name=quantity3]").on("keyup", function(){
-        var quantity = $(this).val();
-        var weight = $("#weight3").val();
-        var amount = $(".amount3").text();
-        $("input[name=amount3").val(amount * quantity);
+    function get_total_weight(id){
+        var total = 0;
+        for (i = 1; i <= parseInt(id); i++){
+            if($("input[name=weight" + i + "]").val()){
+                total += parseFloat($("input[name=weight" + i + "]").val());
+            }
+            else{
+                total += 0;
+            }
+        }
+        $("input[name=total-weight]").val(total);
         
-        get_total();
-    });
-
-    function get_total(){
-        if ($("input[name=amount1").val() && $("input[name=amount2").val() && $("input[name=amount3").val())
-        {
-            var a1 = $("input[name=amount1").val();
-            var a2 = $("input[name=amount2").val();
-            var a3 = $("input[name=amount3").val();
-
-            $("input[name=total]").val(parseInt(a1) + parseInt(a2) + parseInt(a3));
-        }
-        get_grand_total();
-        get_total_weight();
+        get_grand_total(id);
     }
 
-    function get_total_weight(){
-        if ($("input[name=weight1").val() && $("input[name=weight2").val() && $("input[name=weight3").val())
-        {
-            var w1 = $("input[name=weight1").val();
-            var w2 = $("input[name=weight2").val();
-            var w3 = $("input[name=weight3").val();
-
-            $("input[name=total-weight]").val(parseFloat(w1) + parseFloat(w2) + parseFloat(w3));
-        }
-    }
-
-    $("input[name=cgst]").on("keyup", function(){
-        get_grand_total();
-    });
-
-    $("input[name=sgst]").on("keyup", function(){
-        get_grand_total();
-    });
-
-    function get_grand_total(){
+    function get_grand_total(id){
         var cgst = $("input[name=cgst]").val();
         var total = $("input[name=total]").val();
         var cgst_amount = (parseFloat(cgst) / 100) * parseFloat(total);
         $("input[name=cgst-amount]").val(cgst_amount);
-        
+
         var sgst = $("input[name=sgst]").val();
         var total = $("input[name=total]").val();
         var sgst_amount = (parseFloat(sgst) / 100) * parseFloat(total);
@@ -333,35 +277,61 @@
             var total = $("input[name=total").val();
             $("input[name=grand-total").val((((parseFloat(cgst) + parseFloat(sgst)) / 100) * parseFloat(total)) + parseFloat(total));
         }
+
+        $("#download").attr("data-id", id);
     }
 
+    $("input[name=cgst]").on("keyup", function(){
+        var cgst = $("input[name=cgst]").val();
+        var total = $("input[name=total]").val();
+        var cgst_amount = (parseFloat(cgst) / 100) * parseFloat(total);
+        $("input[name=cgst-amount]").val(cgst_amount);
+
+        if($("input[name=cgst").val() && $("input[name=sgst").val()){
+            var cgst = $("input[name=cgst").val();
+            var sgst = $("input[name=sgst").val();
+            var total = $("input[name=total").val();
+            $("input[name=grand-total").val((((parseFloat(cgst) + parseFloat(sgst)) / 100) * parseFloat(total)) + parseFloat(total));
+        }
+    });
+
+    $("input[name=sgst]").on("keyup", function(){
+        var cgst = $("input[name=sgst]").val();
+        var total = $("input[name=total]").val();
+        var sgst_amount = (parseFloat(cgst) / 100) * parseFloat(total);
+        $("input[name=sgst-amount]").val(sgst_amount);
+
+        if($("input[name=cgst").val() && $("input[name=sgst").val()){
+            var cgst = $("input[name=cgst").val();
+            var sgst = $("input[name=sgst").val();
+            var total = $("input[name=total").val();
+            $("input[name=grand-total").val((((parseFloat(cgst) + parseFloat(sgst)) / 100) * parseFloat(total)) + parseFloat(total));
+        }
+    });
+
     $("#download").on("click", function(){
+        var id = $("#download").attr("data-id");
+        var works = new Array();
+        for(var i = 1; i <= parseInt(id); i++){
+            works.push({
+                code        : $("select[data-id=" + i +"]").val(),
+                vendor_name : $(".value" + i).text(),
+                rate        : $(".amount" + i).text(),
+                amount      : $("input[name=amount" + i + "]").val(),
+                quantity    : $("input[name=quantity" + i + "]").val(),
+                weight      : $("input[name=weight" + i + "]").val()
+            });
+        }
+
         $.ajax({
-            url : "{% url 'generate_pdf' %}",
+            url : "{% url 'generate_pdf_assembly' %}",
             type : "GET",
             data : {
                 "company_name"      : $("input[name=company-name]").val(),
                 "date"              : $("#date").val(),
                 "po_number"         : $("input[name=po-no]").val(),
                 "jc_number"         : $("input[name=jc-no]").val(),
-                "code1"             : $("#get_code_values1 option:selected").val(),
-                "vendor_name1"      : $(".value1").text(),
-                "rate1"             : $(".amount1").text(),
-                "amount1"           : $("input[name=amount1]").val(),
-                "quantity1"         : $("input[name=quantity1]").val(),
-                "weight1"           : $("input[name=weight1]").val(),
-                "code2"             : $("#get_code_values2 option:selected").val(),
-                "vendor_name2"      : $(".value2").text(),
-                "rate2"             : $(".amount2").text(),
-                "amount2"           : $("input[name=amount2]").val(),
-                "quantity2"         : $("input[name=quantity2]").val(),
-                "weight2"           : $("input[name=weight2]").val(),
-                "code3"             : $("#get_code_values3 option:selected").val(),
-                "vendor_name3"      : $(".value3").text(),
-                "rate3"             : $(".amount3").text(),
-                "amount3"           : $("input[name=amount3]").val(),
-                "quantity3"         : $("input[name=quantity3]").val(),
-                "weight3"           : $("input[name=weight3]").val(),
+                "works"             : JSON.stringify(works),
                 "drg_number"        : $("input[name=drg-no]").val(),
                 "melt_number"       : $("input[name=melt-no]").val(),
                 "cgst"              : $("input[name=cgst]").val(),
@@ -374,7 +344,7 @@
             },
             dataType : "json",
             success : function(data){
-                window.location = "/works/get/pdf/"
+                window.location = "/works/get/pdf/assembly/"
             },
             error: function(data){
                 // var blob = new Blob([data]);
@@ -383,7 +353,7 @@
                 // link.href=window.URL.createObjectURL(blob);
                 // link.download="download.pdf";
                 // link.click();
-                window.location = "/works/get/pdf/"
+                window.location = "/works/get/pdf/assembly/"
             }
         });
     });

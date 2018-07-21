@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+    width:100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+   
+}
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color: #fff;
+}
+table#t01 th {
+    background-color: black;
+    color: white;
+}
+body{
+    font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+
+<table id="t01">
+
+ <tr id="table-heading">
+    <th colspan="5" style="text-align: center; background-color: black; color: white; padding: 0px">
+       <div>
+        <h1 style="padding-top: 15px">Vaibhav Engineering works</h1>
+        <h2 style="padding-bottom: 10px">Sr.no.51, Pune, Warje-Malwadi</h2>
+       </div>
+    </th>
+ </tr>
+
+  <tr>
+    <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA</td>
+    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G</td>
+  </tr> 
+
+  <tr>
+    <td colspan = "3"><b>Challan No :</b>{{ challan_number }} <b>Date :</b> {{ date }} <br> <b>Vendor No :</b> V0113</td>
+    <td colspan = "2"><b>PO No :</b> {{ po_number }} <br><b>JC No :</b> {{ jc_number }} </td>
+  </tr>
+
+  <tr>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Particular</th> 
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Weight(kg)</th>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Quantity</th>
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Rate</th> 
+    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Amount</th>
+  </tr>
+  {% for work in works %}
+  <tr>
+        <td>{{ work.code }}<br>{{ work.vendor_name }}</td>     
+        <td>{{ work.weight }}</td>
+        <td>{{ work.quantity }}</td>
+        <td>{{ work.rate }}</td>
+        <td>{{ work.amount }}</td>
+    </tr>
+  {% endfor %}
+
+<tr>
+  <td colspan="2" rowspan="2"><b>Drg No.:</b> {{ drg_number }}<br>
+  <b>Melt No.: </b> {{ melt_number }}</td>
+  <td colspan="2" style="text-align: right"><b>Total:</b></td>
+  <td>{{ total }}</td>
+</tr>
+ 
+<tr>
+   <td colspan="2" style="text-align: right"><b>CGST: </b>{{ cgst }} %<br><b>SGST:</b> {{ sgst }} %</td>
+   <td>
+      {{ cgst_amount }}<br>
+      {{ sgst_amount }}
+   </td>
+</tr>
+
+<tr>
+  <td colspan="2"> <b>Total Weight :</b> {{ total_weight }}</td>
+  <td colspan="2" style="text-align: right"> <b>Grand Total :</b></td>
+  <td>{{ grand_total }}</td>
+</tr>
+
+<tr>
+  <td colspan="2"></td>
+  <td colspan="3"><b>Signature:</b></td>
+</tr>
+</table>
+<br>
+
+</body>
+</html>

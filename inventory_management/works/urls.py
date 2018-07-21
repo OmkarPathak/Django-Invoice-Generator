@@ -17,9 +17,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('invoice/', views.invoice_generator, name='invoice_generator'),
+    path('invoice/melt/', views.invoice_generator_melt, name='invoice_generator_melt'),
+    path('invoice/assembly/', views.invoice_generator_assembly, name='invoice_generator_assembly'),
     path('invoice/get/', views.get_code_values, name='get_code_values'),
+    path('invoice/pdf/assembly/', views.generate_pdf_assembly, name='generate_pdf_assembly'),
     path('invoice/pdf/', views.generate_pdf, name='generate_pdf'),
+    path('get/pdf/assembly/', views.get_pdf_assembly, name='get_pdf_assembly'),
     path('get/pdf/', views.get_pdf, name='get_pdf'),
     path('admin/', views.admin, name='admin'),
     path('admin/edit/<id>/', views.admin_edit, name='admin_edit'),

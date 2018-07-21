@@ -6,9 +6,12 @@ from django.http import JsonResponse, HttpResponse
 from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-import time
+import time, json
 
 def render_to_pdf(template_src, context_dict={}):
+    '''
+        Helper function to generate pdf from html
+    '''
     template = get_template(template_src)
     html  = template.render(context_dict)
     result = BytesIO()
@@ -17,17 +20,10 @@ def render_to_pdf(template_src, context_dict={}):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return HttpResponse("Error Rendering PDF", status=400)
 
-# from easy_pdf.views import PDFTemplateView
-# import easy_pdf
-# from easy_pdf.rendering import render_to_pdf_response
-# class PDFView(PDFTemplateView):
-#     template_name = 'pdf/invoice_generator.html'
-#     download_filename = 'hello.pdf'
-
-#     def get_context_data(self, **kwargs):
-#         return self.request.GET
-
 def generate_pdf(request):
+    '''
+        Helper function to generate pdf in case of ajax request
+    '''
     context = request.GET
     request.session['context'] = context
     return redirect('get_pdf')
@@ -43,12 +39,25 @@ def get_pdf(request):
         return response
     return HttpResponse("Not found")
 
-def homepage(request):
-    return render(request, 'base.html')
+def generate_pdf_assembly(request):
+    '''
+        Helper function to generate pdf in case of ajax request
+    '''
+    context = request.GET.copy()
+    context['works'] = json.loads(context['works'])
+    request.session['context'] = context
+    return redirect('get_pdf_assembly')
 
-def invoice_generator(request):
-    works = Work.objects.all().order_by('code')
-    return render(request, 'invoice.html', {'works': works})
+def get_pdf_assembly(request):
+    pdf = render_to_pdf('pdf/invoice_generator_assembly.html', request.session['context'])
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Invoice_{}.pdf".format(time.strftime("%Y%m%d"))
+        content = "inline; filename='{}'".format(filename)
+        content = "attachment; filename='{}'".format(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
 
 def get_code_values(request):
     if request.method == 'GET':
@@ -61,6 +70,17 @@ def get_code_values(request):
             'amount': work.amount
         }
         return JsonResponse(data)
+
+def homepage(request):
+    return render(request, 'base.html')
+
+def invoice_generator_melt(request):
+    works = Work.objects.all().order_by('code')
+    return render(request, 'invoice.html', {'works': works})
+
+def invoice_generator_assembly(request):
+    works = Work.objects.all().order_by('code')
+    return render(request, 'invoice_assembly.html', {'works': works})
 
 def admin(request):
     '''

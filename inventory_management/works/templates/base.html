@@ -24,6 +24,9 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'admin' %} active {% endif %}">
                     <a class="nav-link" href="{% url 'admin'%}">Admin</a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'invoice_generator_melt' %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'invoice_generator_melt'%}">Invoice (Melt)</a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ml-auto">
@@ -40,8 +43,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="">Login</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin' %}">Admin</a>
+                <li class="nav-item {% if request.resolver_match.url_name == 'admin' %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'admin'%}">Admin</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'invoice_generator_melt' %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'invoice_generator_melt'%}">Invoice (Melt)</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'invoice_generator_assembly' %} active {% endif %}">
+                    <a class="nav-link" href="{% url 'invoice_generator_assembly'%}">Invoice (Assembly)</a>
                 </li>
             </ul>
             {% endif %}
