@@ -21,6 +21,15 @@
                         <INPUT TYPE="TEXT" NAME="company-name" class="form-control" placeholder="Company Name">  
                     </div> 
                     <br><b>GSTIN</b> : 27AAACV6873B1ZA
+                    <div class="input-group" style="margin-top: 2%">
+                            <b>HSN Code:</b>
+                            <select id="get_hsc_value" class="form-control" style="margin-left: 2%">
+                                <option value="%">Select Code</option>
+                                {% for work in hsc %} 
+                                    <option value="{{ work.hsc_number }}">{{ work.hsc_number }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
                 </td>
                 <td colspan = "2"><b>GSTIN</b> : 27APGPM6700G122 <br> <b>PAN No</b> : APGPM6700G</td>
             </tr> 
@@ -28,12 +37,12 @@
             <tr>
                 <td colspan = "3" style="vertical-align: middle">
                     <div class="input-group">
-                        <b>Challan No :</b> Number 
+                        <b>Challan No : </b> {{ challan_number }} 
                         <div class="input-group-prepend" style="margin-left: 2%">
                             <span class="input-group-text" id="basic-addon1">Date</span>
                         </div>
                         <INPUT TYPE="date" NAME="date" id="date" class="form-control">
-                        <b style="margin-left: 2%">Vendor No</b> : V0113
+                        <b style="margin-left: 2%">Vendor No</b> : V0113<br>
                     </div>
                 </td>
                 <td colspan = "2">
@@ -195,7 +204,7 @@
         <div class="col">
             <div class="btn btn-group">
                 <div class="btn btn-success" id="download">Download</div>
-                <div class="btn btn-warning" id="clear">Clear</div>
+                <div class="btn btn-warning" id="clear" onclick="return confirm('Are you sure?');">Clear</div>
             </div>
         </div>
     </div>
@@ -206,6 +215,23 @@
 <script>
     $("#clear").on("click", function(){
         $("input").val('');
+    });
+
+    $("#get_hsc_value").on("change", function(){
+        var selectedValue = $(this).val();
+        $.ajax({
+            url : "{% url 'get_hsc_values' %}",
+            type : "GET",
+            data : {"code" : selectedValue},
+            dataType : "json",
+            success : function(data){
+                // alert(data.name);
+                $('input[name=cgst]').val(data.cgst);
+                $('input[name=sgst]').val(data.sgst);
+            }
+        });
+
+        get_grand_total();
     });
 
     // For first work
@@ -341,6 +367,7 @@
             type : "GET",
             data : {
                 "company_name"      : $("input[name=company-name]").val(),
+                "hsc_number"        : $("#get_hsc_value option:selected").val(),
                 "date"              : $("#date").val(),
                 "po_number"         : $("input[name=po-no]").val(),
                 "jc_number"         : $("input[name=jc-no]").val(),
@@ -370,7 +397,8 @@
                 "sgst_amount"       : $("input[name=sgst-amount]").val(),
                 "total"             : $("input[name=total]").val(),
                 "grand_total"       : $("input[name=grand-total]").val(),
-                "total_weight"      : $("input[name=total-weight]").val()
+                "total_weight"      : $("input[name=total-weight]").val(),
+                "challan_number"    : "{{ challan_number }}",
             },
             dataType : "json",
             success : function(data){

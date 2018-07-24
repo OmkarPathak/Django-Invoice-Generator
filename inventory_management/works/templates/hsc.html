@@ -9,10 +9,10 @@
     <div class="col-lg-3 col-md-3" style="margin-top: 2%">
         <ul class="nav flex-column nav-pills">
             <li class="nav-item">
-              <a class="nav-link active" href="{% url 'admin' %}">Add/ Edit Codes</a>
+              <a class="nav-link" href="{% url 'admin' %}">Add/ Edit Codes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'hsc' %}">Add/ Edit HSC Codes</a>
+              <a class="nav-link active" href="{% url 'hsc' %}">Add/ Edit HSC Codes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'challan_no' %}">Reset Challan Number</a>
@@ -52,30 +52,30 @@
             </div>
         </div>
         
-        {% if works %}
+        {% if hsc %}
         <div class="row">
             <table class="table text-center table-bordered table-hover">
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Amount</th>
+                    <th scope="col">HSC Code</th>
+                    <th scope="col">CGST (in %)</th>
+                    <th scope="col">SGST (in %)</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
                   </tr>
                 </thead>
                 <tbody style="background-color: white">
-                    {% for work in works %}
+                    {% for items in hsc %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ work.code }}</td>
-                        <td>{{ work.name }}</td>
-                        <td>{{ work.amount }}</td>
+                        <td>{{ items.hsc_number }}</td>
+                        <td>{{ items.cgst }}</td>
+                        <td>{{ items.sgst }}</td>
                         <td>
-                            <a class="btn btn-primary open-modal" data-url="{% url 'admin_edit' id=work.id %}" style="color: white">Edit</a>
+                            <a class="btn btn-primary open-modal" data-url="{% url 'hsc_edit' id=items.id %}" style="color: white">Edit</a>
                         </td>
-                        <td><a href="{% url 'admin_delete' id=work.id %}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a></td>
+                        <td><a href="{% url 'hsc_delete' id=items.id %}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

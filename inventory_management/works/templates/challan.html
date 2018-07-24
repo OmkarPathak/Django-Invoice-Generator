@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-lg-3 col-md-3" style="margin-top: 2%">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin' %}">Add/ Edit Codes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'hsc' %}">Add/ Edit HSC Codes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'challan_no' %}">Reset Challan Number</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-lg-9 col-md-9" style="margin-top: 2%">
+        {% include 'messages.html' %}
+        <h2>
+            Current Challan Number: <code>{{ challan_number }}</code>
+            <a class="btn btn-primary open-modal" data-url="{% url 'challan_edit' id=1 %}" style="color: white">Edit</a>
+        </h2>
+    </div>
+</div>
+<div class="modal-div"></div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var modalDiv = $(".modal-div");
+    $(".open-modal").on("click", function() {
+    // alert($(this).attr("data-url"));
+    $.ajax({
+        type: 'GET',
+        url: $(this).attr("data-url"),
+        success: function(data) {
+        modalDiv.html(data);
+        // alert('yes');
+        $(".modal").modal();
+        }
+    });
+    });
+</script>
+{% endblock %}
