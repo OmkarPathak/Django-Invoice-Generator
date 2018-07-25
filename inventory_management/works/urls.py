@@ -33,5 +33,7 @@ urlpatterns = [
     path('admin/hsc/delete/<id>/', views.hsc_delete, name='hsc_delete'),
     path('challan/', views.challan_no, name='challan_no'),
     path('challan/edit/<id>/', views.challan_no_edit, name='challan_edit'),
+    path('export/excel/', views.excel_export, name='excel_export'),
+    path('report/assembly/', views.report_assembly, name='report_assembly'),
     path('', views.homepage, name='homepage'),
 ]

@@ -8,6 +8,7 @@ django = "*"
 django-crispy-forms = "*"
 "xhtml2pdf" = "*"
 django-easy-pdf = "*"
+xlsxwriter = "*"
 
 [dev-packages]
 pylint = "*"

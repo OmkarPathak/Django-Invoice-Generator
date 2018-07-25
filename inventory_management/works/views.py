@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
-from .models import Work, AddWorkForm, HSCNumber, AddHSCForm, ChallanNumber, AddChallanForm
+from .models import Work, HSCNumber, ChallanNumber, Report, QuantityRate
+from .models import AddHSCForm, AddChallanForm, AddWorkForm, AssemblyReportForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-import time, json
+import time, json, calendar
+from django.db.models import Q
 
 def render_to_pdf(template_src, context_dict={}):
     '''
@@ -45,6 +47,37 @@ def generate_pdf_assembly(request):
     '''
     context = request.GET.copy()
     context['works'] = json.loads(context['works'])
+
+    challan_number = context.get('challan_number')
+    hsc_number     = context.get('hsc_number')
+    date           = context.get('date')
+    cgst           = context.get('cgst_amount')
+    sgst           = context.get('sgst_amount')
+    total_amount   = context.get('grand_total')
+
+    report = Report.objects.create(
+                challan_number=challan_number,
+                hsc_number=hsc_number,
+                date=date,
+                cgst=cgst,
+                sgst=sgst,
+                total_amount=total_amount
+            )
+    report.save()
+
+    for work in context.get('works'):
+        quant = QuantityRate.objects.create(
+                    quantity=work.get('quantity'),
+                    rate=work.get('rate'),
+                    amount=work.get('amount')
+                )
+        quant.save()
+        quant.report.add(report)
+
+    challan = ChallanNumber.objects.first()
+    challan.challan_number += 1
+    challan.save()
+
     request.session['context'] = context
     return redirect('get_pdf_assembly')
 
@@ -211,8 +244,105 @@ def challan_no(request):
         Get Current Challan Number
     '''
     try:
-        challan_number = ChallanNumber.objects.get(id=1)
+        challan_number = ChallanNumber.objects.first()
     except ChallanNumber.DoesNotExist:
         ChallanNumber(challan_number=1).save()
-        challan_number = ChallanNumber.objects.get(id=1)
+        challan_number = ChallanNumber.objects.first()
     return render(request, 'challan.html', {'challan_number': challan_number})
+
+from xlsxwriter.workbook import Workbook
+
+def excel_export(reports, filename):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = "attachment; filename=" + filename + ".xlsx"
+
+    book = Workbook(response, {'in_memory': True})
+    sheet = book.add_worksheet('Report')
+
+    for col in range(50):
+        sheet.set_column(col, col, 17)
+    
+    merge_format = book.add_format({
+        'bold': 3,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    heading = book.add_format({
+        'bold': 1,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    data = book.add_format({
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    # Table headings
+    sheet.merge_range(
+            'A1:I4', 
+            'VAIBHAV ENGINEERING WORKS\nS.No.15/11/3, \
+             Old Warje Jakat Naka, Behind Kakde City, Karvanagar, \
+             Pune-411052.', 
+            merge_format)
+    sheet.merge_range('A5:A6', 'HSC CODE', heading)
+    sheet.merge_range('B5:B6', 'CHALLAN NUMBER', heading)
+    sheet.merge_range('C5:C6', 'DATE', heading)
+    sheet.merge_range('D5:D6', 'QUANTIY', heading)
+    sheet.merge_range('E5:E6', 'RATE', heading)
+    sheet.merge_range('F5:F6', 'BASIC AMOUNT', heading)
+    sheet.merge_range('G5:G6', 'CGST', heading)
+    sheet.merge_range('H5:H6', 'SGST', heading)
+    sheet.merge_range('I5:I6', 'TOTAL', heading)
+
+    row = 6
+
+    # reports = Report.objects.filter(date__month=7)
+
+    for report in reports:
+        col = 0
+        row += 2
+        sheet.write(row, col, report.hsc_number, data)
+        col += 1
+        sheet.write(row, col, report.challan_number, data)
+        col += 1
+        sheet.write(row, col, report.date, data)
+        col += 1
+        for qr in QuantityRate.objects.filter(report=report):
+            sheet.write(row, col, qr.quantity, data)
+            col += 1
+            sheet.write(row, col, qr.rate, data)
+            col += 1
+            sheet.write(row, col, qr.amount, data)
+            row += 1    
+            col -= 2
+        col += 3
+        row -= 1
+        sheet.write(row, col, report.cgst, data)
+        col += 1
+        sheet.write(row, col, report.sgst, data)
+        col += 1
+        sheet.write(row, col, report.total_amount, data)
+
+    sheet.conditional_format(6, 0, row, col, {'type': 'blanks', 'format' : data})
+    book.close()
+
+    return response
+
+def report_assembly(request):
+    if request.method == 'POST':
+        form = AssemblyReportForm(request.POST)
+        if form.is_valid():
+            query = Q(
+                        date__year=request.POST.get('year'),
+                        date__month=request.POST.get('month')
+                    )
+            report = Report.objects.filter(query)
+            return excel_export(report, 'Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'))
+    else:
+        form = AssemblyReportForm()
+    return render(request, 'report_assembly.html', {'form': form})

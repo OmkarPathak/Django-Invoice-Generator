@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Report | Assembly{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-lg-3 col-md-3" style="margin-top: 2%">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin' %}">Add/ Edit Codes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'hsc' %}">Add/ Edit HSC Codes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'challan_no' %}">Reset Challan Number</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'report_assembly' %}">Assembly Report</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-lg-9 col-md-9">
+        {% include 'messages.html' %}
+        <form method="POST" action="{% url 'report_assembly' %}" style="margin-top: 2%; margin-bottom: 3%">
+            {% csrf_token %}
+            <div class="container">
+                {% csrf_token %}
+                {{ form|crispy }}  
+                <div>
+                    <button type="submit" id="export" name="export" class="btn btn-success" style="margin-top: 2%; border-radius: 0">Export to Excel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
