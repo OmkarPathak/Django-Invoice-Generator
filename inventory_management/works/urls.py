@@ -38,5 +38,5 @@ urlpatterns = [
     path('export/excel/melt/', views.excel_export_melt, name='excel_export_melt'),
     path('report/assembly/', views.report_assembly, name='report_assembly'),
     path('report/melt/', views.report_melt, name='report_melt'),
-    path('', views.homepage, name='homepage'),
+    path('', views.admin, name='homepage'),
 ]

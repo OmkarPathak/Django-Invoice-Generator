@@ -176,7 +176,7 @@ def get_hsc_values(request):
         return JsonResponse(data)
 
 def homepage(request):
-    return render(request, 'base.html')
+    return redirect('admin')
 
 def invoice_generator_melt(request):
     challan_number = MeltChallanNumber.objects.get(id=1)
