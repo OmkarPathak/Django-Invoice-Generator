@@ -33,7 +33,10 @@ urlpatterns = [
     path('admin/hsc/delete/<id>/', views.hsc_delete, name='hsc_delete'),
     path('challan/', views.challan_no, name='challan_no'),
     path('challan/edit/<id>/', views.challan_no_edit, name='challan_edit'),
+    path('challan/edit/melt/<id>/', views.melt_challan_no_edit, name='melt_challan_edit'),
     path('export/excel/', views.excel_export, name='excel_export'),
+    path('export/excel/melt/', views.excel_export_melt, name='excel_export_melt'),
     path('report/assembly/', views.report_assembly, name='report_assembly'),
+    path('report/melt/', views.report_melt, name='report_melt'),
     path('', views.homepage, name='homepage'),
 ]

@@ -10,7 +10,7 @@ table, th, td {
     border-collapse: collapse;
 }
 th, td {
-    padding: 10px;
+    padding: 8px;
     text-align: left;
    
 }
@@ -20,12 +20,28 @@ table#t01 tr:nth-child(even) {
 table#t01 tr:nth-child(odd) {
    background-color: #fff;
 }
-table#t01 th {
+/* table#t01 th {
     background-color: black;
     color: white;
-}
+} */
 body{
     font-size: 12px;
+}
+
+.span{
+  display: block; 
+  clear:both;
+}
+
+.left{
+  /* float: left; */
+  /* display: inline-block; */
+}
+
+.right{
+  /* float: right; */
+  /* display: inline-block; */
+  margin-left: 80%;
 }
 </style>
 </head>
@@ -34,18 +50,22 @@ body{
 
 <table id="t01">
 
- <tr id="table-heading">
-    <th colspan="5" style="text-align: center; background-color: black; color: white; padding: 0px">
-       <div>
-        <h1 style="padding-top: 15px">Vaibhav Engineering works</h1>
-        <h2 style="padding-bottom: 10px">Sr.no.51, Pune, Warje-Malwadi</h2>
+ <tr>
+    <th colspan="5" style="text-align: center; padding: 0px">
+       <div style="text-align: center">
+            <h3 style="padding-top: 10px">DELIEVERY CHALLAN / INVOICE <span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
+            <h1 style="">Vaibhav Engineering works</h1>
+            <h4>An ISO 9001:2008 Cerification</h4>
+            <h3 style="padding-bottom: 10px">
+                    S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar <span>Email: malivp34@gmail.com</span>
+            </h3>
        </div>
     </th>
  </tr>
 
   <tr>
     <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA<br> <b>HSN Code : </b>{{ hsc_number }}</td>
-    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G</td>
+    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G<br> <b>Your Challan: </b>{{ your_challan }} <br> <b>Dated: </b>{{ dated }}</td>
   </tr> 
 
   <tr>
@@ -54,35 +74,35 @@ body{
   </tr>
 
   <tr>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Particular</th> 
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Weight(kg)</th>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Quantity</th>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Rate</th> 
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Amount</th>
+    <th style="text-align: center;">Particular</th> 
+    <th style="text-align: center;">Weight(kg)</th>
+    <th style="text-align: center;">Quantity</th>
+    <th style="text-align: center;">Rate</th> 
+    <th style="text-align: center;">Amount</th>
   </tr>
 
   <tr>
     <td>{{ code1 }}<br>{{ vendor_name1 }}</td>     
-    <td>{{ weight1 }}</td>
+    <td>{{ weight1 }}<br>({% if bags1 %}{{ bags1 }}{% else %}0{% endif %} Bags/ Sacks)</td>
     <td>{{ quantity1 }}</td>
     <td>{{ rate1 }}</td>
     <td>{{ amount1 }}</td>
   </tr>
 
   <tr>
-    <td>{{ code2 }}<br>{{ vendor_name2 }}</td>     
-    <td>{{ weight2 }}</td>
-    <td>{{ quantity2 }}</td>
-    <td>{{ rate2 }}</td>
-    <td>{{ amount2 }}</td>
+    <td>End Pieces:</td>     
+    <td>{{ weight2 }}<br>({% if bags2 %}{{ bags2 }}{% else %}0{% endif %} Bags/ Sacks)</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
   </tr>
 
   <tr>  
-    <td>{{ code3 }}<br>{{ vendor_name3 }}</td>     
-    <td>{{ weight3 }}</td>
-    <td>{{ quantity3 }}</td>
-    <td>{{ rate3 }}</td>
-    <td>{{ amount3 }}</td>
+    <td>Scrap:</td>     
+    <td>{{ weight3 }}<br>({% if bags3 %}{{ bags3 }}{% else %}0{% endif %} Bags/ Sacks)</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
   </tr>
 
 <tr>
@@ -94,21 +114,32 @@ body{
  
 <tr>
    <td colspan="2" style="text-align: right"><b>CGST: </b>{{ cgst }} %<br><b>SGST:</b> {{ sgst }} %</td>
-   <td>
-      {{ cgst_amount }}<br>
-      {{ sgst_amount }}
+   <td>-
    </td>
 </tr>
 
 <tr>
-  <td colspan="2"> <b>Total Weight :</b> {{ total_weight }}</td>
+  <td colspan="2"> <b>Total Weight :</b> {% if total_weight %}{{ total_weight }}{% else %}-{% endif %}</td>
   <td colspan="2" style="text-align: right"> <b>Grand Total :</b></td>
-  <td>{{ grand_total }}</td>
+  <td>-</td>
 </tr>
 
 <tr>
-  <td colspan="2"></td>
-  <td colspan="3"><b>Signature:</b></td>
+    <td colspan="3">
+        <div style="text-align: center">
+            Receives the above mentioned goods in good working condition
+        </div>
+        <br>
+        <div style="width: 100%">
+            <span class="left" style="white-space: pre;">Send Through                                                              Received By</span>
+        </div>
+    </td>
+    <td colspan="2">
+        <br>
+        <div style="vertical-align: bottom !important; text-align: center">
+            For Vaibhav Engineering Works
+        </div>
+    </td>
 </tr>
 </table>
 <br>

@@ -20,14 +20,22 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'report_assembly' %}">Assembly Report</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'report_melt' %}">Melt Report</a>
+            </li>
         </ul>
     </div>
 
     <div class="col-lg-9 col-md-9" style="margin-top: 2%">
         {% include 'messages.html' %}
         <h2>
-            Current Challan Number: <code>{{ challan_number }}</code>
+            Other Challan Number: <code>{{ challan_number }}</code>
             <a class="btn btn-primary open-modal" data-url="{% url 'challan_edit' id=1 %}" style="color: white">Edit</a>
+        </h2>
+
+        <h2>
+            Melt Challan Number: <code>{{ melt_challan_number }}</code>
+            <a class="btn btn-primary open-modal" data-url="{% url 'melt_challan_edit' id=1 %}" style="color: white">Edit</a>
         </h2>
     </div>
 </div>

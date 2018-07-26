@@ -13,10 +13,19 @@ class Work(models.Model):
 		return 'Code: ' + self.code + ', Name: ' + self.name
 
 class ChallanNumber(models.Model):
+	'''
+		Assembly Challan Number
+	'''
 	challan_number = models.IntegerField()
 
 	def __str__(self):
 		return str(self.challan_number)
+
+class MeltChallanNumber(models.Model):
+	melt_challan_number = models.IntegerField()
+
+	def __str__(self):
+		return str(self.melt_challan_number)
 
 class HSCNumber(models.Model):
 	hsc_number  = models.CharField(max_length=200)
@@ -32,6 +41,14 @@ class Report(models.Model):
 	sgst			= models.FloatField()
 	total_amount	= models.FloatField()
 	date_added		= models.DateTimeField(auto_now_add=True)
+
+class MeltReport(models.Model):
+	particular		= models.CharField(max_length=200)
+	challan_number	= models.IntegerField(unique=True)
+	date			= models.DateField()
+	quantity		= models.FloatField()
+	rate			= models.FloatField()
+	amount			= models.FloatField()
 
 class QuantityRate(models.Model):
 	report 			= models.ManyToManyField(Report)
@@ -54,6 +71,11 @@ class AddChallanForm(ModelForm):
 		model  = ChallanNumber
 		fields = ['challan_number']
 
+class AddMeltChallanForm(ModelForm):
+	class Meta:
+		model  = MeltChallanNumber
+		fields = ['melt_challan_number']
+
 YEAR_CHOICES = []
 for year in range(2018, datetime.datetime.now().year + 1):
     YEAR_CHOICES.append((year, year))
@@ -61,5 +83,9 @@ for year in range(2018, datetime.datetime.now().year + 1):
 MONTHS_CHOICES = tuple(zip(range(1,13), (calendar.month_name[i] for i in range(1,13))))
 
 class AssemblyReportForm(forms.Form):
+	month = forms.ChoiceField(choices=MONTHS_CHOICES)
+	year = forms.ChoiceField(choices=YEAR_CHOICES)
+
+class MeltReportForm(forms.Form):
 	month = forms.ChoiceField(choices=MONTHS_CHOICES)
 	year = forms.ChoiceField(choices=YEAR_CHOICES)

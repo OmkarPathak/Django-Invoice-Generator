@@ -31,13 +31,27 @@
                             </select>
                     </div>
                 </td>
-                <td colspan = "2"><b>GSTIN</b> : 27APGPM6700G122 <br> <b>PAN No</b> : APGPM6700G</td>
+                <td colspan = "2">
+                    <b>GSTIN</b> : 27APGPM6700G122 <br> <b>PAN No</b> : APGPM6700G
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Your Challan</span>
+                        </div>
+                        <INPUT TYPE="TEXT" NAME="your-challan" class="form-control">
+                    </div>
+                    <div class="input-group" style="margin-top: 2%"> 
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Dated</span>
+                        </div>
+                        <INPUT TYPE="date" NAME="dated" class="form-control">
+                    </div>
+                </td>
             </tr> 
             
             <tr>
                 <td colspan = "3" style="vertical-align: middle">
                     <div class="input-group">
-                        <b>Challan No : </b> {{ challan_number }} 
+                        <b>Challan No : </b> <span style="color: red; margin-left: 2%"><b>{{ challan_number }}</b></span> 
                         <div class="input-group-prepend" style="margin-left: 2%">
                             <span class="input-group-text" id="basic-addon1">Date</span>
                         </div>
@@ -80,7 +94,15 @@
                         <h5 class="value1" style="margin-top: 10%; margin-bottom: 0"></h5>
                     </div>
                 </td>            
-                <td><INPUT class="form-control" TYPE="number" NAME="weight1" placeholder="Weight"></td>
+                <td>
+                    <INPUT class="form-control" TYPE="number" NAME="weight1" placeholder="Weight">
+                    <div class="input-group" style="margin-top: 2%">
+                        <INPUT class="form-control" TYPE="number" NAME="bags1" placeholder="">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">Bags/ Sacks</span>
+                        </div>
+                    </div>
+                </td>
                 <td><INPUT class="form-control" TYPE="number" NAME="quantity1" placeholder="Quantity"></td>
                 <td>
                     <div><h5 class="amount1"></h5></div>
@@ -157,8 +179,24 @@
             </tr>
             
             <tr>
-                <td colspan="2"></td>
-                <td colspan="3"><b>Signature:</b></td>
+                <td colspan="2">
+                    <div style="text-align: center">
+                        Receives the above mentioned goods in good working condition
+                    </div>
+                    <br>
+                    <br>
+                    <div style="display: inline">
+                        <span style="float: left">Send Through</span>
+                        <span style="float: right; ">Received By</span>
+                    </div>
+                </td>
+                <td colspan="3">
+                    <br>
+                    <br>
+                    <div style="vertical-align: bottom !important; text-align: center">
+                        For Vaibhav Engineering Works
+                    </div>
+                </td>
             </tr>
     </tbody>
 
@@ -193,7 +231,15 @@
                         <h5 class="value` + id + `" style="margin-top: 10%; margin-bottom: 0"></h5>
                     </div>
                 </td>
-                <td><INPUT class="form-control" TYPE="number" NAME="weight` + id + `" placeholder="Weight"></td>
+                <td>
+                    <INPUT class="form-control" TYPE="number" NAME="weight` + id + `" placeholder="Weight">
+                    <div class="input-group" style="margin-top: 2%">
+                        <INPUT class="form-control" TYPE="number" NAME="bags` + id + `" placeholder="">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">Bags/ Sacks</span>
+                        </div>
+                    </div>
+                </td>
                 <td><INPUT class="form-control" TYPE="number" NAME="quantity` + id + `" placeholder="Quantity"></td>
                 <td>
                     <div><h5 class="amount` + id + `"></h5></div>
@@ -352,7 +398,8 @@
                 rate        : $(".amount" + i).text(),
                 amount      : $("input[name=amount" + i + "]").val(),
                 quantity    : $("input[name=quantity" + i + "]").val(),
-                weight      : $("input[name=weight" + i + "]").val()
+                weight      : $("input[name=weight" + i + "]").val(),
+                bags        : $("input[name=bags" + i + "]").val()
             });
         }
 
@@ -376,10 +423,15 @@
                 "grand_total"       : $("input[name=grand-total]").val(),
                 "total_weight"      : $("input[name=total-weight]").val(),
                 "challan_number"    : "{{ challan_number }}",
+                "your_challan"      : $("input[name=your-challan]").val(),
+                "dated"             : $("input[name=dated]").val(),
             },
             dataType : "json",
             success : function(data){
-                window.location = "/works/get/pdf/assembly/"
+                window.location = "/works/get/pdf/assembly/";
+                setTimeout(function(){
+                    window.location.replace("/works/admin/");
+                }, 3000);
             },
             error: function(data){
                 // var blob = new Blob([data]);
@@ -388,7 +440,10 @@
                 // link.href=window.URL.createObjectURL(blob);
                 // link.download="download.pdf";
                 // link.click();
-                window.location = "/works/get/pdf/assembly/"
+                window.location = "/works/get/pdf/assembly/";
+                setTimeout(function(){
+                    window.location.replace("/works/admin/");
+                }, 3000);
             }
         });
     });

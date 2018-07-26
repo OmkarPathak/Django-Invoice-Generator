@@ -10,7 +10,7 @@ table, th, td {
     border-collapse: collapse;
 }
 th, td {
-    padding: 10px;
+    padding: 8px;
     text-align: left;
    
 }
@@ -20,10 +20,10 @@ table#t01 tr:nth-child(even) {
 table#t01 tr:nth-child(odd) {
    background-color: #fff;
 }
-table#t01 th {
+/* table#t01 th {
     background-color: black;
     color: white;
-}
+} */
 body{
     font-size: 12px;
 }
@@ -34,18 +34,22 @@ body{
 
 <table id="t01">
 
- <tr id="table-heading">
-    <th colspan="5" style="text-align: center; background-color: black; color: white; padding: 0px">
-       <div>
-        <h1 style="padding-top: 15px">Vaibhav Engineering works</h1>
-        <h2 style="padding-bottom: 10px">Sr.no.51, Pune, Warje-Malwadi</h2>
-       </div>
+ <tr>
+    <th colspan="5" style="text-align: center;">
+        <div style="text-align: center">
+            <h3 style="padding-top: 10px">DELIEVERY CHALLAN / INVOICE <span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
+            <h1 style="padding: 0">Vaibhav Engineering works</h1>
+            <h4 style="padding: 0">An ISO 9001:2008 Cerification</h4>
+            <h3 style="padding-bottom: 10px">
+                    S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar <span>Email: malivp34@gmail.com</span>
+            </h3>
+        </div>
     </th>
  </tr>
 
   <tr>
     <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA<br> <b>HSN Code : </b>{{ hsc_number }}</td>
-    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G</td>
+    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G<br> <b>Your Challan: </b>{{ your_challan }} <br> <b>Dated: </b>{{ dated }}</td>
   </tr> 
 
   <tr>
@@ -54,16 +58,16 @@ body{
   </tr>
 
   <tr>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Particular</th> 
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Weight(kg)</th>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Quantity</th>
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Rate</th> 
-    <th style="text-align: center; background-color: black; color: white; border: 1px solid white">Amount</th>
+    <th style="text-align: center;">Particular</th> 
+    <th style="text-align: center;">Weight(kg)</th>
+    <th style="text-align: center;">Quantity</th>
+    <th style="text-align: center;">Rate</th> 
+    <th style="text-align: center;">Amount</th>
   </tr>
   {% for work in works %}
   <tr>
         <td>{{ work.code }}<br>{{ work.vendor_name }}</td>     
-        <td>{{ work.weight }}</td>
+        <td>{{ work.weight }}<br>{% if work.bags %}{{ work.bags }}{% else %}0{% endif %} Bags/Sacks</td>
         <td>{{ work.quantity }}</td>
         <td>{{ work.rate }}</td>
         <td>{{ work.amount }}</td>
@@ -92,8 +96,27 @@ body{
 </tr>
 
 <tr>
-  <td colspan="2"></td>
-  <td colspan="3"><b>Signature:</b></td>
+    <td colspan="5">
+        Rs. {{ amount_in_words }}
+    </td>
+</tr>
+
+<tr>
+    <td colspan="3">
+        <div style="text-align: center">
+            Receives the above mentioned goods in good working condition
+        </div>
+        <br>
+        <div style="width: 100%">
+            <span class="left" style="white-space: pre;">Send Through                                                            Received By</span>
+        </div>
+    </td>
+    <td colspan="2">
+        <br>
+        <div style="vertical-align: bottom !important; text-align: center">
+            For Vaibhav Engineering Works
+        </div>
+    </td>
 </tr>
 </table>
 <br>

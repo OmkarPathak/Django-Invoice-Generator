@@ -18,17 +18,17 @@
                 <a class="nav-link" href="{% url 'challan_no' %}">Reset Challan Number</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'report_assembly' %}">Assembly Report</a>
+                <a class="nav-link" href="{% url 'report_assembly' %}">Assembly Report</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'report_melt' %}">Melt Report</a>
+                <a class="nav-link active" href="{% url 'report_melt' %}">Melt Report</a>
             </li>
         </ul>
     </div>
 
     <div class="col-lg-9 col-md-9">
         {% include 'messages.html' %}
-        <form method="POST" action="{% url 'report_assembly' %}" style="margin-top: 2%; margin-bottom: 3%">
+        <form method="POST" action="{% url 'report_melt' %}" style="margin-top: 2%; margin-bottom: 3%">
             {% csrf_token %}
             <div class="container">
                 {% csrf_token %}

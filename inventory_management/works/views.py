@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
-from .models import Work, HSCNumber, ChallanNumber, Report, QuantityRate
-from .models import AddHSCForm, AddChallanForm, AddWorkForm, AssemblyReportForm
+from .models import Work, HSCNumber, ChallanNumber, MeltChallanNumber, Report, QuantityRate, MeltReport
+from .models import AddHSCForm, AddChallanForm, AddWorkForm, AssemblyReportForm, MeltReportForm, AddMeltChallanForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-import time, json, calendar
+import time, json, calendar, inflect
 from django.db.models import Q
+from xlsxwriter.workbook import Workbook
+
+num2words = inflect.engine()
 
 def render_to_pdf(template_src, context_dict={}):
     '''
@@ -28,13 +31,49 @@ def generate_pdf(request):
     '''
     context = request.GET
     request.session['context'] = context
+
+    particular      = request.GET.get('vendor_name1')
+    challan_number  = request.GET.get('challan_number')
+    date            = request.GET.get('date')
+    quantity        = request.GET.get('quantity1')
+    rate            = request.GET.get('rate1')
+    amount          = request.GET.get('amount1')
+
+    # If user enters the same challan number then the previous record for that paricular challan number
+    # is deleted and new record is overriden onto the old one
+    try:
+        report = MeltReport(
+                    particular=particular,
+                    challan_number=challan_number,
+                    date=date,
+                    quantity=quantity,
+                    rate=rate,
+                    amount=amount
+                )
+        report.save()
+
+        challan = MeltChallanNumber.objects.first()
+        challan.melt_challan_number += 1
+        challan.save()
+    except:
+        MeltReport.objects.filter(challan_number=challan_number).delete()
+        report = MeltReport(
+                    particular=particular,
+                    challan_number=challan_number,
+                    date=date,
+                    quantity=quantity,
+                    rate=rate,
+                    amount=amount
+                )
+        report.save()
+
     return redirect('get_pdf')
 
 def get_pdf(request):
     pdf = render_to_pdf('pdf/invoice_generator.html', request.session['context'])
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_{}.pdf".format(time.strftime("%Y%m%d"))
+        filename = "Melt_Invoice_{}.pdf".format(request.session.get('context').get('challan_number'))
         content = "inline; filename='{}'".format(filename)
         content = "attachment; filename='{}'".format(filename)
         response['Content-Disposition'] = content
@@ -47,7 +86,8 @@ def generate_pdf_assembly(request):
     '''
     context = request.GET.copy()
     context['works'] = json.loads(context['works'])
-
+    context['amount_in_words'] = num2words.number_to_words(context.get('grand_total')) + ' only'
+    print(context['amount_in_words'])
     challan_number = context.get('challan_number')
     hsc_number     = context.get('hsc_number')
     date           = context.get('date')
@@ -55,28 +95,48 @@ def generate_pdf_assembly(request):
     sgst           = context.get('sgst_amount')
     total_amount   = context.get('grand_total')
 
-    report = Report.objects.create(
-                challan_number=challan_number,
-                hsc_number=hsc_number,
-                date=date,
-                cgst=cgst,
-                sgst=sgst,
-                total_amount=total_amount
-            )
-    report.save()
-
-    for work in context.get('works'):
-        quant = QuantityRate.objects.create(
-                    quantity=work.get('quantity'),
-                    rate=work.get('rate'),
-                    amount=work.get('amount')
+    # If user enters the same challan number then the previous record for that paricular challan number
+    # is deleted and new record is overriden onto the old one
+    try:
+        report = Report.objects.create(
+                    challan_number=challan_number,
+                    hsc_number=hsc_number,
+                    date=date,
+                    cgst=cgst,
+                    sgst=sgst,
+                    total_amount=total_amount
                 )
-        quant.save()
-        quant.report.add(report)
+        report.save()
 
-    challan = ChallanNumber.objects.first()
-    challan.challan_number += 1
-    challan.save()
+        challan = ChallanNumber.objects.first()
+        challan.challan_number += 1
+        challan.save()
+    except:
+        QuantityRate.objects.filter(report__challan_number=challan_number).delete()
+        Report.objects.filter(challan_number=challan_number).delete()
+        report = Report.objects.create(
+                    challan_number=challan_number,
+                    hsc_number=hsc_number,
+                    date=date,
+                    cgst=cgst,
+                    sgst=sgst,
+                    total_amount=total_amount
+                )
+        report.save()
+
+    # Sometime user might delete a row dynamically and hence an empty dict is passed to server
+    # Hence we will check if amount is present in the dict else we delete that particular dic record
+    for index, work in enumerate(context.get('works')):
+        if work.get('amount'):
+            quant = QuantityRate.objects.create(
+                        quantity=work.get('quantity'),
+                        rate=work.get('rate'),
+                        amount=work.get('amount')
+                    )
+            quant.save()
+            quant.report.add(report)
+        else:
+            del context.get('works')[index]
 
     request.session['context'] = context
     return redirect('get_pdf_assembly')
@@ -119,7 +179,7 @@ def homepage(request):
     return render(request, 'base.html')
 
 def invoice_generator_melt(request):
-    challan_number = ChallanNumber.objects.get(id=1)
+    challan_number = MeltChallanNumber.objects.get(id=1)
     works = Work.objects.all().order_by('code')
     hsc   = HSCNumber.objects.all()
     context = {
@@ -224,7 +284,7 @@ def hsc_delete(request, id):
 
 def challan_no_edit(request, id):
     '''
-        To edit current entry of challan number that is already created
+        To edit current entry of assembly challan number that is already created
     '''
     challan = get_object_or_404(ChallanNumber, id=id)
     if request.method == 'POST':
@@ -241,16 +301,38 @@ def challan_no_edit(request, id):
 
 def challan_no(request):
     '''
-        Get Current Challan Number
+        Get Current Challan Number of Assembly
     '''
     try:
         challan_number = ChallanNumber.objects.first()
     except ChallanNumber.DoesNotExist:
         ChallanNumber(challan_number=1).save()
         challan_number = ChallanNumber.objects.first()
-    return render(request, 'challan.html', {'challan_number': challan_number})
 
-from xlsxwriter.workbook import Workbook
+    try:
+        melt_challan_number = MeltChallanNumber.objects.first()
+    except MeltChallanNumber.DoesNotExist:
+        MeltChallanNumber(melt_challan_number=1).save()
+        melt_challan_number = MeltChallanNumber.objects.first()
+
+    return render(request, 'challan.html', {'challan_number': challan_number, 'melt_challan_number': melt_challan_number})
+
+def melt_challan_no_edit(request, id):
+    '''
+        To edit current entry of melt challan number that is already created
+    '''
+    challan = get_object_or_404(MeltChallanNumber, id=id)
+    if request.method == 'POST':
+        form = AddMeltChallanForm(request.POST, instance=challan)
+        if form.is_valid():
+            form.save()
+        messages.success(request, 'Entry Edited successfully')
+        return redirect('challan_no')
+    else:
+        form = AddMeltChallanForm(initial={
+                                'melt_challan_number'  : challan.melt_challan_number
+                            }, instance=challan)
+        return render(request, 'melt_challan_edit_modal.html', {'form': form})
 
 def excel_export(reports, filename):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -260,7 +342,7 @@ def excel_export(reports, filename):
     sheet = book.add_worksheet('Report')
 
     for col in range(50):
-        sheet.set_column(col, col, 17)
+        sheet.set_column(col, col, 15)
     
     merge_format = book.add_format({
         'bold': 3,
@@ -290,7 +372,7 @@ def excel_export(reports, filename):
              Pune-411052.', 
             merge_format)
     sheet.merge_range('A5:A6', 'HSC CODE', heading)
-    sheet.merge_range('B5:B6', 'CHALLAN NUMBER', heading)
+    sheet.merge_range('B5:B6', 'CHALLAN \n NUMBER', heading)
     sheet.merge_range('C5:C6', 'DATE', heading)
     sheet.merge_range('D5:D6', 'QUANTIY', heading)
     sheet.merge_range('E5:E6', 'RATE', heading)
@@ -346,3 +428,151 @@ def report_assembly(request):
     else:
         form = AssemblyReportForm()
     return render(request, 'report_assembly.html', {'form': form})
+
+def excel_export_melt(reports, filename):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = "attachment; filename=" + filename + ".xlsx"
+
+    book = Workbook(response, {'in_memory': True})
+    sheet = book.add_worksheet('Report')
+
+    for col in range(50):
+        sheet.set_column(col, col, 15)
+    
+    merge_format = book.add_format({
+        'bold': 3,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    heading = book.add_format({
+        'bold': 1,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    data = book.add_format({
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    heading2 = book.add_format({
+        'bold': 1,
+        'border': 1
+    })
+
+    # Table headings
+    sheet.merge_range(
+            'A1:I5', 
+            'DELIVERY CHALLAN / INVOICE \t \t \tMob:9423222798, 9881212348\n\
+             VAIBHAV ENGINEERING WORKS\nAn ISO 9001 : 2008 Certification\nS.No.15/11/3,\
+             Old Warje Jakat Naka, Behind Kakde City, Karvanagar,\
+             Pune-411052.', 
+            merge_format)
+
+    sheet.merge_range(
+            'A6:G9', 
+            'To, M/S\n \
+             Vanaz Engineers Ltd. 85/1, Paud road, Pune-38\n \
+             State Code:\n \
+             GSTIN / Unique ID: 27AAACV6873B1ZA',
+            heading2
+            )
+
+    sheet.merge_range(
+            'H6:I9', 
+            'GSTI-27APGPM-6700G1ZZ\n \
+             \nPAN NO:-APGPM6700G',
+            heading2
+            )
+
+    sheet.merge_range(
+            'A10:D13', 
+            'INVOICE Number: \t \t \tDate: \n\
+             \nVendor Code: V0113',
+            heading2
+            )
+
+    sheet.merge_range(
+            'E10:I13', 
+            'P.O. Number: \t \t \tDated:\
+            \nJ.C. Number: \t \t \tDated:\n\
+            \nOur Challan Number',
+            heading2
+            )
+
+    sheet.merge_range('A14:A15', 'SR\nNO', heading)
+    sheet.merge_range('B14:D15', 'PARTICULAR', heading)
+    sheet.merge_range('E14:E15', 'OUR CHALLAN\nNUMBER', heading)
+    sheet.merge_range('F14:F15', 'CHALLAN\nDATE', heading)
+    sheet.merge_range('G14:G15', 'QUANTITY', heading)
+    sheet.merge_range('H14:H15', 'RATE', heading)
+    sheet.merge_range('I14:I15', 'AMOUNT', heading)
+
+    row = 15
+    total = 0
+    for index, report in enumerate(reports):
+        total += report.amount
+        col = 0
+        row += 2
+        sheet.write(row, col, index, data)
+        col += 1
+        sheet.merge_range(row, col, row, col + 2, report.particular, data)
+        col += 3
+        sheet.write(row, col, report.challan_number, data)
+        col += 1
+        sheet.write(row, col, report.date, data)
+        col += 1
+        sheet.write(row, col, report.quantity, data)
+        col += 1
+        sheet.write(row, col, report.rate, data)
+        col += 1
+        sheet.write(row, col, report.amount, data)
+
+    row += 2
+    col -= 1
+
+    cgst = (0.09 * total)
+    sgst = (0.09 * total)
+    grand_total = total + cgst + sgst
+    words = num2words.number_to_words(round(grand_total, 2))
+
+    sheet.write(row, col, 'Total: ', data)
+    col += 1
+    sheet.write(row, col, total, data)
+    row += 1
+    sheet.write(row, col - 1, 'CGST: ', data)
+    sheet.write(row, col, cgst, data)
+    row += 1
+    sheet.write(row, col - 1, 'SGST: ', data)
+    sheet.write(row, col, sgst, data)
+    row += 2
+    sheet.write(row, col - 1, 'Grand Total: ', heading)
+    sheet.write(row, col, grand_total, data)
+    row += 1
+    sheet.merge_range(row, 0, row, 8, 'Rs. ' + words + ' only', data)
+    row += 2
+    sheet.merge_range(row, 0, row + 4, 5, 'Receives the above mentioned good in good working condition \n\n\nSend Through \t \t \tReceived By', data)
+    sheet.merge_range(row, 6, row + 4, 8, ' For Vaibhav Engineering Works', data)
+
+    sheet.conditional_format(15, 0, row, 8, {'type': 'blanks', 'format' : data})
+    book.close()
+
+    return response
+
+def report_melt(request):
+    if request.method == 'POST':
+        form = MeltReportForm(request.POST)
+        if form.is_valid():
+            query = Q(
+                        date__year=request.POST.get('year'),
+                        date__month=request.POST.get('month')
+                    )
+            report = MeltReport.objects.filter(query)
+            return excel_export_melt(report, 'Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'))
+    else:
+        form = MeltReportForm()
+    return render(request, 'report_melt.html', {'form': form})
