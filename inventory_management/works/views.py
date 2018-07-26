@@ -67,6 +67,10 @@ def generate_pdf(request):
                 )
         report.save()
 
+        challan = MeltChallanNumber.objects.first()
+        challan.melt_challan_number += 1
+        challan.save()
+
     return redirect('get_pdf')
 
 def get_pdf(request):
@@ -123,6 +127,10 @@ def generate_pdf_assembly(request):
                     total_amount=total_amount
                 )
         report.save()
+
+        challan = ChallanNumber.objects.first()
+        challan.challan_number += 1
+        challan.save()
 
     # Sometime user might delete a row dynamically and hence an empty dict is passed to server
     # Hence we will check if amount is present in the dict else we delete that particular dic record
