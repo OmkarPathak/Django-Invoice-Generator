@@ -55,17 +55,16 @@ body{
        <div style="text-align: center">
             <h3 style="padding-top: 10px">DELIEVERY CHALLAN / INVOICE <span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
             <h1 style="">Vaibhav Engineering works</h1>
-            <h4>An ISO 9001:2008 Cerification</h4>
             <h3 style="padding-bottom: 10px">
-                    S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar <span>Email: malivp34@gmail.com</span>
+                    S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar <span>Email: malivp94@gmail.com</span>
             </h3>
        </div>
     </th>
  </tr>
 
   <tr>
-    <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA<br> <b>HSN Code : </b>{{ hsc_number }}</td>
-    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G122 <br> <b>PAN No :</b> APGPM6700G<br> <b>Your Challan: </b>{{ your_challan }} <br> <b>Dated: </b>{{ dated }}</td>
+    <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA<br> <b>HSN/ SAC Code : </b>{{ hsc_number }}</td>
+    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G1ZZ <br> <b>PAN No :</b> APGPM6700G<br> <b>Your Challan: </b>{{ your_challan }} <br> <b>Dated: </b>{{ dated }}</td>
   </tr> 
 
   <tr>
@@ -83,7 +82,7 @@ body{
 
   <tr>
     <td>{{ code1 }}<br>{{ vendor_name1 }}</td>     
-    <td>{{ weight1 }}<br>({% if bags1 %}{{ bags1 }}{% else %}0{% endif %} Bags/ Sacks)</td>
+    <td>{{ weight1 }}<br>({% if bags1 %}{{ bags1 }}{% else %}0{% endif %} Bags)</td>
     <td>{{ quantity1 }}</td>
     <td>{{ rate1 }}</td>
     <td>{{ amount1 }}</td>
@@ -91,7 +90,7 @@ body{
 
   <tr>
     <td>End Pieces:</td>     
-    <td>{{ weight2 }}<br>({% if bags2 %}{{ bags2 }}{% else %}0{% endif %} Bags/ Sacks)</td>
+    <td>{{ weight2 }}<br>({% if bags2 %}{{ bags2 }}{% else %}0{% endif %} Bags)</td>
     <td>-</td>
     <td>-</td>
     <td>-</td>
@@ -99,7 +98,7 @@ body{
 
   <tr>  
     <td>Scrap:</td>     
-    <td>{{ weight3 }}<br>({% if bags3 %}{{ bags3 }}{% else %}0{% endif %} Bags/ Sacks)</td>
+    <td>{{ weight3 }}<br>({% if bags3 %}{{ bags3 }}{% else %}0{% endif %} Bags)</td>
     <td>-</td>
     <td>-</td>
     <td>-</td>

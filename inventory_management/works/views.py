@@ -184,7 +184,7 @@ def get_hsc_values(request):
         return JsonResponse(data)
 
 def homepage(request):
-    return redirect('admin')
+    return redirect('invoice_generator_assembly')
 
 def invoice_generator_melt(request):
     challan_number = MeltChallanNumber.objects.get(id=1)
@@ -476,7 +476,7 @@ def excel_export_melt(reports, filename):
     sheet.merge_range(
             'A1:I5', 
             'DELIVERY CHALLAN / INVOICE \t \t \tMob:9423222798, 9881212348\n\
-             VAIBHAV ENGINEERING WORKS\nAn ISO 9001 : 2008 Certification\nS.No.15/11/3,\
+             VAIBHAV ENGINEERING WORKS\nS.No.15/11/3,\
              Old Warje Jakat Naka, Behind Kakde City, Karvanagar,\
              Pune-411052.', 
             merge_format)
