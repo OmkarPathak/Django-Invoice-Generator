@@ -1,0 +1,17 @@
+<ul class="nav flex-column nav-pills">
+    <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'admin' %} active {% endif %}" href="{% url 'admin' %}">Add/ Edit Codes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'hsc' %} active {% endif %}" href="{% url 'hsc' %}">Add/ Edit HSN Codes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'challan_no' %} active {% endif %}" href="{% url 'challan_no' %}">Reset Challan Number</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'report_assembly' %} active {% endif %}" href="{% url 'report_assembly' %}">Assembly Report</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'report_melt' %} active {% endif %}" href="{% url 'report_melt' %}">Melt Report</a>
+    </li>
+</ul>

@@ -1,29 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin{% endblock %}
+{% block title %}Edit HSC{% endblock %}
 
 {% block content %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 <div class="row">
     <div class="col-lg-3 col-md-3" style="margin-top: 2%">
-        <ul class="nav flex-column nav-pills">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'admin' %}">Add/ Edit Codes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'hsc' %}">Add/ Edit HSC Codes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'challan_no' %}">Reset Challan Number</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'report_assembly' %}">Assembly Report</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'report_melt' %}">Melt Report</a>
-            </li>
-        </ul>
+        {% include 'admin_sidepanel.html' %}
     </div>
     <div class="col-lg-9 col-md-9">
         <div class="row">
@@ -64,7 +48,7 @@
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">HSC Code</th>
+                    <th scope="col">HSN Code</th>
                     <th scope="col">CGST (in %)</th>
                     <th scope="col">SGST (in %)</th>
                     <th scope="col">Edit</th>

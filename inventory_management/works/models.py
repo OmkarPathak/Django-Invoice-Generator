@@ -28,7 +28,7 @@ class MeltChallanNumber(models.Model):
 		return str(self.melt_challan_number)
 
 class HSCNumber(models.Model):
-	hsc_number  = models.CharField(max_length=200)
+	hsc_number  = models.CharField(('HSN Code'), max_length=200)
 	cgst 		= models.FloatField(('CGST (in %)'))
 	sgst 		= models.FloatField(('SGST (in %)'))
 	date_added	= models.DateTimeField(auto_now_add=True)
