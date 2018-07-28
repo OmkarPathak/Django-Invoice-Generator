@@ -343,12 +343,12 @@
         var cgst = $("input[name=cgst]").val();
         var total = $("input[name=total]").val();
         var cgst_amount = (parseFloat(cgst) / 100) * parseFloat(total);
-        $("input[name=cgst-amount]").val(cgst_amount);
+        $("input[name=cgst-amount]").val(cgst_amount.toFixed(2));
 
         var sgst = $("input[name=sgst]").val();
         var total = $("input[name=total]").val();
         var sgst_amount = (parseFloat(sgst) / 100) * parseFloat(total);
-        $("input[name=sgst-amount]").val(sgst_amount);
+        $("input[name=sgst-amount]").val(sgst_amount.toFixed(2));
 
         if($("input[name=cgst").val() && $("input[name=sgst").val()){
             var cgst = $("input[name=cgst").val();
