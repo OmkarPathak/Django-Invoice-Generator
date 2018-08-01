@@ -49,6 +49,10 @@ class MeltReport(models.Model):
 	quantity		= models.FloatField()
 	rate			= models.FloatField()
 	amount			= models.FloatField()
+	weight			= models.CharField(max_length=100, blank=True, null=True)
+	scrap_weight	= models.CharField(max_length=100, blank=True, null=True)
+	end_pieces		= models.CharField(max_length=100, blank=True, null=True)
+	total_weight	= models.CharField(max_length=100, blank=True, null=True)
 
 class QuantityRate(models.Model):
 	report 			= models.ManyToManyField(Report)
@@ -87,5 +91,9 @@ class AssemblyReportForm(forms.Form):
 	year = forms.ChoiceField(choices=YEAR_CHOICES)
 
 class MeltReportForm(forms.Form):
+	month = forms.ChoiceField(choices=MONTHS_CHOICES)
+	year = forms.ChoiceField(choices=YEAR_CHOICES)
+
+class StockReportForm(forms.Form):
 	month = forms.ChoiceField(choices=MONTHS_CHOICES)
 	year = forms.ChoiceField(choices=YEAR_CHOICES)

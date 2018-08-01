@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Work, HSCNumber, ChallanNumber, MeltChallanNumber, Report, QuantityRate, MeltReport
-from .models import AddHSCForm, AddChallanForm, AddWorkForm, AssemblyReportForm, MeltReportForm, AddMeltChallanForm
+from .models import AddHSCForm, AddChallanForm, AddWorkForm, AssemblyReportForm, MeltReportForm, AddMeltChallanForm, StockReportForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
@@ -38,6 +38,10 @@ def generate_pdf(request):
     quantity        = request.GET.get('quantity1')
     rate            = request.GET.get('rate1')
     amount          = request.GET.get('amount1')
+    weight          = request.GET.get('weight1')
+    scrap_weight    = request.GET.get('weight2')
+    end_pieces      = request.GET.get('weight3')
+    total_weight    = request.GET.get('total_weight')
 
     # If user enters the same challan number then the previous record for that paricular challan number
     # is deleted and new record is overriden onto the old one
@@ -48,7 +52,11 @@ def generate_pdf(request):
                     date=date,
                     quantity=quantity,
                     rate=rate,
-                    amount=amount
+                    amount=amount,
+                    weight=weight,
+                    scrap_weight=scrap_weight,
+                    end_pieces=end_pieces,
+                    total_weight=total_weight
                 )
         report.save()
 
@@ -526,7 +534,7 @@ def excel_export_melt(reports, filename):
         total += report.amount
         col = 0
         row += 2
-        sheet.write(row, col, index, data)
+        sheet.write(row, col, index + 1, data)
         col += 1
         sheet.merge_range(row, col, row, col + 2, report.particular, data)
         col += 3
@@ -584,3 +592,116 @@ def report_melt(request):
     else:
         form = MeltReportForm()
     return render(request, 'report_melt.html', {'form': form})
+
+
+def stock_report(reports, filename, month, year):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = "attachment; filename=" + filename + ".xlsx"
+
+    book = Workbook(response, {'in_memory': True})
+    sheet = book.add_worksheet('Report')
+
+    for col in range(50):
+        sheet.set_column(col, col, 10)
+    
+    merge_format = book.add_format({
+        'bold': 3,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    heading = book.add_format({
+        'bold': 1,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    data = book.add_format({
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+    })
+
+    heading2 = book.add_format({
+        'bold': 1,
+        'border': 1
+    })
+
+    # Table headings
+    sheet.merge_range(
+            'A1:M5', 
+            'Mob:9423222798, 9881212348\n\
+             VAIBHAV ENGINEERING WORKS\nS.No.15/11/3,\
+             Old Warje Jakat Naka, Behind Kakde City, Karvanagar,\
+             Pune-411052.\n \
+             MONTHLY STOCK STATEMENTS FOR THE MONTH '  + month + ' ' + year, 
+            merge_format)
+
+    sheet.merge_range(
+            'A6:F7',
+             'REICEVED FROM VANAZ ENG. LTD.',
+            heading
+            )
+
+    sheet.merge_range(
+            'G6:M7', 
+            'ISSUED FROM VAIBHAV ENG. WORKS',
+            heading
+            )
+
+    sheet.merge_range('A8:A9', 'SR\nNO', heading)
+    sheet.merge_range('B8:B9', 'MELT OF BLANK', heading)
+    sheet.merge_range('C8:C9', 'CHALLAN\nNUMBER', heading)
+    sheet.merge_range('D8:D9', 'DATE', heading)
+    sheet.merge_range('E8:E9', 'WEIGHT (KG)', heading)
+    sheet.merge_range('F8:F9', 'QUANTITY IN', heading)
+    sheet.merge_range('G8:G9', 'CHALLAN\nNUMBER', heading)
+    sheet.merge_range('H8:H9', 'DATE', heading)
+    sheet.merge_range('I8:I9', 'QUANTITY OUT', heading)
+    sheet.merge_range('J8:J9', 'WEIGHT (KG)', heading)
+    sheet.merge_range('K8:K9', 'SCRAP WEIGHT (KG)', heading)
+    sheet.merge_range('L8:L9', 'END PIECES WEIGHT', heading)
+    sheet.merge_range('M8:M9', 'TOTAL WEIGHT', heading)
+
+    row = 9
+    for index, report in enumerate(reports):
+        row += 1
+        col = 0
+        sheet.write(row, col, index + 1, data)
+        col += 1
+        sheet.write(row, col, report.particular, data)
+        col += 5
+        sheet.write(row, col, report.challan_number, data)
+        col += 1
+        sheet.write(row, col, report.date, data)
+        col += 1
+        sheet.write(row, col, report.quantity, data)
+        col += 1
+        sheet.write(row, col, report.weight, data)
+        col += 1
+        sheet.write(row, col, report.scrap_weight, data)
+        col += 1
+        sheet.write(row, col, report.end_pieces, data)
+        col += 1
+        sheet.write(row, col, report.total_weight, data)
+
+    sheet.conditional_format(10, 0, row, 8, {'type': 'blanks', 'format' : data})
+    book.close()
+
+    return response
+
+def stock_report_monthly(request):
+    if request.method == 'POST':
+        form = StockReportForm(request.POST)
+        if form.is_valid():
+            query = Q(
+                        date__year=request.POST.get('year'),
+                        date__month=request.POST.get('month')
+                    )
+            report = MeltReport.objects.filter(query)
+            return stock_report(report, 'Stock_Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'), calendar.month_name[int(request.POST.get('month'))], request.POST.get('year'))
+    else:
+        form = StockReportForm()
+    return render(request, 'stock_report.html', {'form': form})

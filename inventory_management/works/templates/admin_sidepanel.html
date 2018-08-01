@@ -14,4 +14,7 @@
     <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.url_name == 'report_melt' %} active {% endif %}" href="{% url 'report_melt' %}">Melt Report</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'stock_report_monthly' %} active {% endif %}" href="{% url 'stock_report_monthly' %}">Stock Report Report</a>
+    </li>
 </ul>

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock Report | Melt{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-lg-3 col-md-3" style="margin-top: 2%">
+        {% include 'admin_sidepanel.html' %}
+    </div>
+
+    <div class="col-lg-9 col-md-9">
+        {% include 'messages.html' %}
+        <form method="POST" action="{% url 'stock_report_monthly' %}" style="margin-top: 2%; margin-bottom: 3%">
+            {% csrf_token %}
+            <div class="container">
+                {% csrf_token %}
+                {{ form|crispy }}  
+                <div>
+                    <button type="submit" id="export" name="export" class="btn btn-success" style="margin-top: 2%; border-radius: 0">Export to Excel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
