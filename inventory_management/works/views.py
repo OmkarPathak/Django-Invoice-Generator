@@ -358,13 +358,14 @@ def excel_export(reports, filename):
     sheet = book.add_worksheet('Report')
 
     for col in range(50):
-        sheet.set_column(col, col, 15)
+        sheet.set_column(col, col, 6)
     
     merge_format = book.add_format({
         'bold': 3,
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 6
     })
 
     heading = book.add_format({
@@ -372,12 +373,14 @@ def excel_export(reports, filename):
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 6
     })
 
     data = book.add_format({
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 6
     })
 
     # Table headings
@@ -403,7 +406,7 @@ def excel_export(reports, filename):
 
     for report in reports:
         col = 0
-        row += 2
+        row += 1
         sheet.write(row, col, report.hsc_number, data)
         col += 1
         sheet.write(row, col, report.challan_number, data)
@@ -453,13 +456,14 @@ def excel_export_melt(reports, filename):
     sheet = book.add_worksheet('Report')
 
     for col in range(50):
-        sheet.set_column(col, col, 15)
+        sheet.set_column(col, col, 6)
     
     merge_format = book.add_format({
         'bold': 3,
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 6
     })
 
     heading = book.add_format({
@@ -467,22 +471,25 @@ def excel_export_melt(reports, filename):
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 6
     })
 
     data = book.add_format({
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 6
     })
 
     heading2 = book.add_format({
         'bold': 1,
-        'border': 1
+        'border': 1,
+        'font_size': 6
     })
 
     # Table headings
     sheet.merge_range(
-            'A1:I5', 
+            'A1:I4', 
             'DELIVERY CHALLAN / INVOICE \t \t \tMob:9423222798, 9881212348\n\
              VAIBHAV ENGINEERING WORKS\nS.No.15/11/3,\
              Old Warje Jakat Naka, Behind Kakde City, Karvanagar,\
@@ -490,7 +497,7 @@ def excel_export_melt(reports, filename):
             merge_format)
 
     sheet.merge_range(
-            'A6:G9', 
+            'A5:F7', 
             'To, M/S\n \
              Vanaz Engineers Ltd. 85/1, Paud road, Pune-38\n \
              State Code:\n \
@@ -499,21 +506,21 @@ def excel_export_melt(reports, filename):
             )
 
     sheet.merge_range(
-            'H6:I9', 
+            'G5:I7', 
             'GSTI-27APGPM-6700G1ZZ\n \
              \nPAN NO:-APGPM6700G',
             heading2
             )
 
     sheet.merge_range(
-            'A10:D13', 
+            'A8:D9', 
             'INVOICE Number: \t \t \tDate: \n\
              \nVendor Code: V0113',
             heading2
             )
 
     sheet.merge_range(
-            'E10:I13', 
+            'E8:I9', 
             'P.O. Number: \t \t \tDated:\
             \nJ.C. Number: \t \t \tDated:\n\
             \nOur Challan Number',
@@ -528,12 +535,12 @@ def excel_export_melt(reports, filename):
     sheet.merge_range('H14:H15', 'RATE', heading)
     sheet.merge_range('I14:I15', 'AMOUNT', heading)
 
-    row = 15
+    row = 9
     total = 0
     for index, report in enumerate(reports):
         total += report.amount
         col = 0
-        row += 2
+        row += 1
         sheet.write(row, col, index + 1, data)
         col += 1
         sheet.merge_range(row, col, row, col + 2, report.particular, data)
@@ -574,7 +581,7 @@ def excel_export_melt(reports, filename):
     sheet.merge_range(row, 0, row + 4, 5, 'Receives the above mentioned good in good working condition \n\n\nSend Through \t \t \tReceived By', data)
     sheet.merge_range(row, 6, row + 4, 8, ' For Vaibhav Engineering Works', data)
 
-    sheet.conditional_format(15, 0, row, 8, {'type': 'blanks', 'format' : data})
+    sheet.conditional_format(9, 0, row, 8, {'type': 'blanks', 'format' : data})
     book.close()
 
     return response
@@ -602,13 +609,14 @@ def stock_report(reports, filename, month, year):
     sheet = book.add_worksheet('Report')
 
     for col in range(50):
-        sheet.set_column(col, col, 10)
+        sheet.set_column(col, col, 7)
     
     merge_format = book.add_format({
         'bold': 3,
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 8
     })
 
     heading = book.add_format({
@@ -616,26 +624,28 @@ def stock_report(reports, filename, month, year):
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 8
     })
 
     data = book.add_format({
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
+        'font_size': 8
     })
 
     heading2 = book.add_format({
         'bold': 1,
-        'border': 1
+        'border': 1,
+        'font_size': 8
     })
 
     # Table headings
     sheet.merge_range(
             'A1:M5', 
-            'Mob:9423222798, 9881212348\n\
-             VAIBHAV ENGINEERING WORKS\nS.No.15/11/3,\
-             Old Warje Jakat Naka, Behind Kakde City, Karvanagar,\
-             Pune-411052.\n \
+            'Mob:9423222798, 9881212348\n\n\
+             VAIBHAV ENGINEERING WORKS\n\
+             S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar, Pune-411052.\n\n\
              MONTHLY STOCK STATEMENTS FOR THE MONTH '  + month + ' ' + year, 
             merge_format)
 
@@ -652,18 +662,18 @@ def stock_report(reports, filename, month, year):
             )
 
     sheet.merge_range('A8:A9', 'SR\nNO', heading)
-    sheet.merge_range('B8:B9', 'MELT OF BLANK', heading)
+    sheet.merge_range('B8:B9', 'MELT OF\nBLANK', heading)
     sheet.merge_range('C8:C9', 'CHALLAN\nNUMBER', heading)
     sheet.merge_range('D8:D9', 'DATE', heading)
-    sheet.merge_range('E8:E9', 'WEIGHT (KG)', heading)
-    sheet.merge_range('F8:F9', 'QUANTITY IN', heading)
+    sheet.merge_range('E8:E9', 'WEIGHT\n(KG)', heading)
+    sheet.merge_range('F8:F9', 'QUANTITY\nIN', heading)
     sheet.merge_range('G8:G9', 'CHALLAN\nNUMBER', heading)
     sheet.merge_range('H8:H9', 'DATE', heading)
-    sheet.merge_range('I8:I9', 'QUANTITY OUT', heading)
-    sheet.merge_range('J8:J9', 'WEIGHT (KG)', heading)
-    sheet.merge_range('K8:K9', 'SCRAP WEIGHT (KG)', heading)
-    sheet.merge_range('L8:L9', 'END PIECES WEIGHT', heading)
-    sheet.merge_range('M8:M9', 'TOTAL WEIGHT', heading)
+    sheet.merge_range('I8:I9', 'QUANTITY\nOUT', heading)
+    sheet.merge_range('J8:J9', 'WEIGHT\n(KG)', heading)
+    sheet.merge_range('K8:K9', 'SCRAP\nWEIGHT\n(KG)', heading)
+    sheet.merge_range('L8:L9', 'END\nPIECES\nWEIGHT', heading)
+    sheet.merge_range('M8:M9', 'TOTAL\nWEIGHT', heading)
 
     row = 9
     for index, report in enumerate(reports):
@@ -687,7 +697,7 @@ def stock_report(reports, filename, month, year):
         col += 1
         sheet.write(row, col, report.total_weight, data)
 
-    sheet.conditional_format(10, 0, row, 8, {'type': 'blanks', 'format' : data})
+    sheet.conditional_format(9, 0, row, 8, {'type': 'blanks', 'format' : data})
     book.close()
 
     return response
