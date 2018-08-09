@@ -443,7 +443,7 @@ def report_assembly(request):
                         date__month=request.POST.get('month')
                     )
             report = Report.objects.filter(query)
-            return excel_export(report, 'Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'))
+            return excel_export(report, 'Assembly_Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'))
     else:
         form = AssemblyReportForm()
     return render(request, 'report_assembly.html', {'form': form})
@@ -527,15 +527,15 @@ def excel_export_melt(reports, filename):
             heading2
             )
 
-    sheet.merge_range('A14:A15', 'SR\nNO', heading)
-    sheet.merge_range('B14:D15', 'PARTICULAR', heading)
-    sheet.merge_range('E14:E15', 'OUR CHALLAN\nNUMBER', heading)
-    sheet.merge_range('F14:F15', 'CHALLAN\nDATE', heading)
-    sheet.merge_range('G14:G15', 'QUANTITY', heading)
-    sheet.merge_range('H14:H15', 'RATE', heading)
-    sheet.merge_range('I14:I15', 'AMOUNT', heading)
+    sheet.merge_range('A10:A11', 'SR\nNO', heading)
+    sheet.merge_range('B10:D11', 'PARTICULAR', heading)
+    sheet.merge_range('E10:E11', 'OUR CHALLAN\nNUMBER', heading)
+    sheet.merge_range('F10:F11', 'CHALLAN\nDATE', heading)
+    sheet.merge_range('G10:G11', 'QUANTITY', heading)
+    sheet.merge_range('H10:H11', 'RATE', heading)
+    sheet.merge_range('I10:I11', 'AMOUNT', heading)
 
-    row = 9
+    row = 12
     total = 0
     for index, report in enumerate(reports):
         total += report.amount
@@ -595,7 +595,7 @@ def report_melt(request):
                         date__month=request.POST.get('month')
                     )
             report = MeltReport.objects.filter(query)
-            return excel_export_melt(report, 'Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'))
+            return excel_export_melt(report, 'Melt_Report_' + calendar.month_name[int(request.POST.get('month'))] + '_' + request.POST.get('year'))
     else:
         form = MeltReportForm()
     return render(request, 'report_melt.html', {'form': form})
