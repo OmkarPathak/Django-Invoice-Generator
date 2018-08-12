@@ -18,7 +18,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">To, M/S</span>
                         </div>
-                        <INPUT TYPE="TEXT" NAME="company-name" class="form-control" placeholder="Company Name">  
+                        <INPUT TYPE="TEXT" NAME="company-name" class="form-control" value="VANAZ ENGINEERS LTD, 85/1, PAUD ROAD, PUNE-38">  
                     </div> 
                     <br><b>GSTIN</b> : 27AAACV6873B1ZA
                     <div class="input-group" style="margin-top: 2%">
@@ -304,7 +304,8 @@
             var quantity = $(this).val();
             var weight = $("#weight" + id).val();
             var amount = $(".amount" + id).text();
-            $("input[name=amount"  + id + "]").val(amount * quantity);
+            var amount = amount * quantity;
+            $("input[name=amount"  + id + "]").val(amount.toFixed(2));
 
             get_total(id);
         });
@@ -430,7 +431,7 @@
             success : function(data){
                 window.location = "/works/get/pdf/assembly/";
                 setTimeout(function(){
-                    window.location.replace("/works/admin/");
+                    window.location.replace("/works/invoice/assembly/");
                 }, 3000);
             },
             error: function(data){
@@ -442,7 +443,7 @@
                 // link.click();
                 window.location = "/works/get/pdf/assembly/";
                 setTimeout(function(){
-                    window.location.replace("/works/admin/");
+                    window.location.replace("/works/invoice/assembly/");
                 }, 3000);
             }
         });

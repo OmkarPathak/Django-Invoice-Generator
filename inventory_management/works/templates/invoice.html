@@ -18,7 +18,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">To, M/S</span>
                         </div>
-                        <INPUT TYPE="TEXT" NAME="company-name" autocomplete="on" id="company-name" class="form-control" placeholder="Company Name">  
+                        <INPUT TYPE="TEXT" NAME="company-name" autocomplete="on" id="company-name" class="form-control" value="VANAZ ENGINEERS LTD, 85/1, PAUD ROAD, PUNE-38">  
                     </div> 
                     <br><b>GSTIN</b> : 27AAACV6873B1ZA
                     <div class="input-group" style="margin-top: 2%">
@@ -445,7 +445,7 @@
             success : function(data){
                 window.location = "/works/get/pdf/";
                 setTimeout(function(){
-                    window.location.replace("/works/admin/");
+                    window.location.replace("/works/invoice/melt/");
                 }, 3000);
             },
             error: function(data){
@@ -457,7 +457,7 @@
                 // link.click();
                 window.location = "/works/get/pdf/";
                 setTimeout(function(){
-                    window.location.replace("/works/admin/");
+                    window.location.replace("/works/invoice/melt/");
                 }, 3000);
             }
         });

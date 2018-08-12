@@ -386,14 +386,14 @@ def excel_export(reports, filename):
     # Table headings
     sheet.merge_range(
             'A1:I4', 
-            'VAIBHAV ENGINEERING WORKS\nS.No.15/11/3, \
+            'SALES\nVAIBHAV ENGINEERING WORKS\nS.No.15/11/3, \
              Old Warje Jakat Naka, Behind Kakde City, Karvanagar, \
              Pune-411052.', 
             merge_format)
-    sheet.merge_range('A5:A6', 'HSC CODE', heading)
+    sheet.merge_range('A5:A6', 'HSCN CODE', heading)
     sheet.merge_range('B5:B6', 'CHALLAN \n NUMBER', heading)
     sheet.merge_range('C5:C6', 'DATE', heading)
-    sheet.merge_range('D5:D6', 'QUANTIY', heading)
+    sheet.merge_range('D5:D6', 'QUANTITY', heading)
     sheet.merge_range('E5:E6', 'RATE', heading)
     sheet.merge_range('F5:F6', 'BASIC AMOUNT', heading)
     sheet.merge_range('G5:G6', 'CGST', heading)
@@ -663,11 +663,11 @@ def stock_report(reports, filename, month, year):
 
     sheet.merge_range('A8:A9', 'SR\nNO', heading)
     sheet.merge_range('B8:B9', 'MELT OF\nBLANK', heading)
-    sheet.merge_range('C8:C9', 'CHALLAN\nNUMBER', heading)
+    sheet.merge_range('C8:C9', 'YOURS\nCHALLAN\nNUMBER', heading)
     sheet.merge_range('D8:D9', 'DATE', heading)
     sheet.merge_range('E8:E9', 'WEIGHT\n(KG)', heading)
     sheet.merge_range('F8:F9', 'QUANTITY\nIN', heading)
-    sheet.merge_range('G8:G9', 'CHALLAN\nNUMBER', heading)
+    sheet.merge_range('G8:G9', 'OURS\nCHALLAN\nNUMBER', heading)
     sheet.merge_range('H8:H9', 'DATE', heading)
     sheet.merge_range('I8:I9', 'QUANTITY\nOUT', heading)
     sheet.merge_range('J8:J9', 'WEIGHT\n(KG)', heading)
