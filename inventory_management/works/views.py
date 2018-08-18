@@ -71,7 +71,11 @@ def generate_pdf(request):
                     date=date,
                     quantity=quantity,
                     rate=rate,
-                    amount=amount
+                    amount=amount,
+                    weight=weight,
+                    scrap_weight=scrap_weight,
+                    end_pieces=end_pieces,
+                    total_weight=total_weight
                 )
         report.save()
 
@@ -161,7 +165,7 @@ def get_pdf_assembly(request):
     pdf = render_to_pdf('pdf/invoice_generator_assembly.html', request.session['context'])
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_{}.pdf".format(time.strftime("%Y%m%d"))
+        filename = "Assembly_Invoice_{}.pdf".format(request.session.get('context').get('challan_number'))
         content = "inline; filename='{}'".format(filename)
         content = "attachment; filename='{}'".format(filename)
         response['Content-Disposition'] = content
