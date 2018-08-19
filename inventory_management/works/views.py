@@ -32,6 +32,7 @@ def generate_pdf(request):
     context = request.GET
     request.session['context'] = context
 
+    code            = request.GET.get('code1')
     particular      = request.GET.get('vendor_name1')
     challan_number  = request.GET.get('challan_number')
     date            = request.GET.get('date')
@@ -47,6 +48,7 @@ def generate_pdf(request):
     # is deleted and new record is overriden onto the old one
     try:
         report = MeltReport(
+                    code=code,
                     particular=particular,
                     challan_number=challan_number,
                     date=date,
@@ -66,6 +68,7 @@ def generate_pdf(request):
     except:
         MeltReport.objects.filter(challan_number=challan_number).delete()
         report = MeltReport(
+                    code=code,
                     particular=particular,
                     challan_number=challan_number,
                     date=date,
@@ -362,7 +365,7 @@ def excel_export(reports, filename):
     sheet = book.add_worksheet('Report')
 
     for col in range(50):
-        sheet.set_column(col, col, 6)
+        sheet.set_column(col, col, 10)
     
     merge_format = book.add_format({
         'bold': 3,
@@ -394,7 +397,7 @@ def excel_export(reports, filename):
              Old Warje Jakat Naka, Behind Kakde City, Karvanagar, \
              Pune-411052.', 
             merge_format)
-    sheet.merge_range('A5:A6', 'HSCN CODE', heading)
+    sheet.merge_range('A5:A6', 'HSN CODE', heading)
     sheet.merge_range('B5:B6', 'CHALLAN \n NUMBER', heading)
     sheet.merge_range('C5:C6', 'DATE', heading)
     sheet.merge_range('D5:D6', 'QUANTITY', heading)
@@ -501,43 +504,41 @@ def excel_export_melt(reports, filename):
             merge_format)
 
     sheet.merge_range(
-            'A5:F7', 
-            'To, M/S\n \
-             Vanaz Engineers Ltd. 85/1, Paud road, Pune-38\n \
-             State Code:\n \
-             GSTIN / Unique ID: 27AAACV6873B1ZA',
+            'A5:F6', 
+            'To, M/S Vanaz Engineers Ltd. 85/1, Paud road, Pune-38\n \
+             GSTIN / Unique ID: 27AAACV6873B1ZA \t State Code:',
             heading2
             )
 
     sheet.merge_range(
-            'G5:I7', 
+            'G5:I6', 
             'GSTI-27APGPM-6700G1ZZ\n \
              \nPAN NO:-APGPM6700G',
             heading2
             )
 
     sheet.merge_range(
-            'A8:D9', 
+            'A7:D8', 
             'INVOICE Number: \t \t \tDate: \n\
              \nVendor Code: V0113',
             heading2
             )
 
     sheet.merge_range(
-            'E8:I9', 
+            'E7:I8', 
             'P.O. Number: \t \t \tDated:\
             \nJ.C. Number: \t \t \tDated:\n\
             \nOur Challan Number',
             heading2
             )
 
-    sheet.merge_range('A10:A11', 'SR\nNO', heading)
-    sheet.merge_range('B10:D11', 'PARTICULAR', heading)
-    sheet.merge_range('E10:E11', 'OUR CHALLAN\nNUMBER', heading)
-    sheet.merge_range('F10:F11', 'CHALLAN\nDATE', heading)
-    sheet.merge_range('G10:G11', 'QUANTITY', heading)
-    sheet.merge_range('H10:H11', 'RATE', heading)
-    sheet.merge_range('I10:I11', 'AMOUNT', heading)
+    sheet.merge_range('A9:A11', 'SR\nNO', heading)
+    sheet.merge_range('B9:D11', 'PARTICULAR', heading)
+    sheet.merge_range('E9:E11', 'OUR CHALLAN\nNUMBER', heading)
+    sheet.merge_range('F9:F11', 'CHALLAN\nDATE', heading)
+    sheet.merge_range('G9:G11', 'QUANTITY', heading)
+    sheet.merge_range('H9:H11', 'RATE', heading)
+    sheet.merge_range('I9:I11', 'AMOUNT', heading)
 
     row = 12
     total = 0
@@ -559,14 +560,14 @@ def excel_export_melt(reports, filename):
         col += 1
         sheet.write(row, col, report.amount, data)
 
-    row += 2
+    # row += 2
     col -= 1
 
     cgst = (0.09 * total)
     sgst = (0.09 * total)
     grand_total = total + cgst + sgst
     words = num2words.number_to_words(round(grand_total, 2))
-
+    row += 1
     sheet.write(row, col, 'Total: ', data)
     col += 1
     sheet.write(row, col, total, data)
@@ -582,8 +583,8 @@ def excel_export_melt(reports, filename):
     row += 1
     sheet.merge_range(row, 0, row, 8, 'Rs. ' + words + ' only', data)
     row += 2
-    sheet.merge_range(row, 0, row + 4, 5, 'Receives the above mentioned good in good working condition \n\n\nSend Through \t \t \tReceived By', data)
-    sheet.merge_range(row, 6, row + 4, 8, ' For Vaibhav Engineering Works', data)
+    sheet.merge_range(row, 0, row + 2, 5, 'Receives the above mentioned good in good working condition \n\n\nSend Through \t \t \tReceived By', data)
+    sheet.merge_range(row, 6, row + 2, 8, ' For Vaibhav Engineering Works', data)
 
     sheet.conditional_format(9, 0, row, 8, {'type': 'blanks', 'format' : data})
     book.close()
@@ -614,6 +615,7 @@ def stock_report(reports, filename, month, year):
 
     for col in range(50):
         sheet.set_column(col, col, 7)
+        sheet.set_row(col, 30)
     
     merge_format = book.add_format({
         'bold': 3,
@@ -638,6 +640,13 @@ def stock_report(reports, filename, month, year):
         'font_size': 8
     })
 
+    data2 = book.add_format({
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+        'font_size': 6
+    })
+
     heading2 = book.add_format({
         'bold': 1,
         'border': 1,
@@ -646,7 +655,7 @@ def stock_report(reports, filename, month, year):
 
     # Table headings
     sheet.merge_range(
-            'A1:M5', 
+            'A1:M3', 
             'Mob:9423222798, 9881212348\n\n\
              VAIBHAV ENGINEERING WORKS\n\
              S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar, Pune-411052.\n\n\
@@ -654,38 +663,39 @@ def stock_report(reports, filename, month, year):
             merge_format)
 
     sheet.merge_range(
-            'A6:F7',
+            'A4:F4',
              'REICEVED FROM VANAZ ENG. LTD.',
             heading
             )
 
     sheet.merge_range(
-            'G6:M7', 
+            'G4:M4', 
             'ISSUED FROM VAIBHAV ENG. WORKS',
             heading
             )
 
-    sheet.merge_range('A8:A9', 'SR\nNO', heading)
-    sheet.merge_range('B8:B9', 'MELT OF\nBLANK', heading)
-    sheet.merge_range('C8:C9', 'YOURS\nCHALLAN\nNUMBER', heading)
-    sheet.merge_range('D8:D9', 'DATE', heading)
-    sheet.merge_range('E8:E9', 'WEIGHT\n(KG)', heading)
-    sheet.merge_range('F8:F9', 'QUANTITY\nIN', heading)
-    sheet.merge_range('G8:G9', 'OURS\nCHALLAN\nNUMBER', heading)
-    sheet.merge_range('H8:H9', 'DATE', heading)
-    sheet.merge_range('I8:I9', 'QUANTITY\nOUT', heading)
-    sheet.merge_range('J8:J9', 'WEIGHT\n(KG)', heading)
-    sheet.merge_range('K8:K9', 'SCRAP\nWEIGHT\n(KG)', heading)
-    sheet.merge_range('L8:L9', 'END\nPIECES\nWEIGHT', heading)
-    sheet.merge_range('M8:M9', 'TOTAL\nWEIGHT', heading)
+    sheet.merge_range('A5:A6', 'SR\nNO', heading)
+    # sheet.merge_range('B5:B6', 'ITEM\nCODE\nNo', heading)
+    sheet.merge_range('B5:B6', 'MELT OF\nBLANK', heading)
+    sheet.merge_range('C5:C6', 'YOURS\nCHALLAN\nNUMBER', heading)
+    sheet.merge_range('D5:D6', 'DATE', heading)
+    sheet.merge_range('E5:E6', 'WEIGHT\n(KG)', heading)
+    sheet.merge_range('F5:F6', 'QTY\nIN', heading)
+    sheet.merge_range('G5:G6', 'OURS\nCHALLAN\nNUMBER', heading)
+    sheet.merge_range('H5:H6', 'DATE', heading)
+    sheet.merge_range('I5:I6', 'QTY\nOUT', heading)
+    sheet.merge_range('J5:J6', 'WEIGHT\n(KG)', heading)
+    sheet.merge_range('K5:K6', 'SCRAP\nWEIGHT\n(KG)', heading)
+    sheet.merge_range('L5:L6', 'END\nPIECES\nWEIGHT', heading)
+    sheet.merge_range('M5:M6', 'TOTAL\nWEIGHT', heading)
 
-    row = 9
+    row = 6
     for index, report in enumerate(reports):
         row += 1
         col = 0
         sheet.write(row, col, index + 1, data)
         col += 1
-        sheet.write(row, col, report.particular, data)
+        sheet.write(row, col, str(report.code) + "\n" + str(report.particular), data)
         col += 5
         sheet.write(row, col, report.challan_number, data)
         col += 1
@@ -701,7 +711,7 @@ def stock_report(reports, filename, month, year):
         col += 1
         sheet.write(row, col, report.total_weight, data)
 
-    sheet.conditional_format(9, 0, row, 8, {'type': 'blanks', 'format' : data})
+    sheet.conditional_format(6, 0, row, 8, {'type': 'blanks', 'format' : data})
     book.close()
 
     return response

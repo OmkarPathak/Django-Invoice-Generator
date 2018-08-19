@@ -64,12 +64,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">PO No</span>
                             </div>
-                            <INPUT TYPE="TEXT" NAME="po-no" class="form-control"> 
+                            <INPUT TYPE="TEXT" NAME="po-no" class="form-control" value="SC-GST/PO/00/18-19"> 
                         
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">JC No</span>
                             </div>
-                            <INPUT TYPE="TEXT" NAME="jc-no" class="form-control">
+                            <INPUT TYPE="TEXT" NAME="jc-no" class="form-control" value="PPCQA/SC/00/18-19">
                     </div>
                 </td>
             </tr>
@@ -293,7 +293,8 @@
         var quantity = $(this).val();
         var weight = $("#weight1").val();
         var amount = $(".amount1").text();
-        $("input[name=amount1]").val(amount * quantity);
+        var amount = amount * quantity;
+        $("input[name=amount1]").val(amount.toFixed(2));
 
         get_total();
     });

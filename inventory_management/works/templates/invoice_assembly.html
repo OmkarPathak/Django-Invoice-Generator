@@ -304,7 +304,7 @@
             var quantity = $(this).val();
             var weight = $("#weight" + id).val();
             var amount = $(".amount" + id).text();
-            var amount = amount * quantity;
+		 var amount = amount * quantity;
             $("input[name=amount"  + id + "]").val(amount.toFixed(2));
 
             get_total(id);

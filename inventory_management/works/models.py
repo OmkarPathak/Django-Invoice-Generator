@@ -43,6 +43,7 @@ class Report(models.Model):
 	date_added		= models.DateTimeField(auto_now_add=True)
 
 class MeltReport(models.Model):
+	code			= models.CharField(max_length=200, blank=True, null=True)
 	particular		= models.CharField(max_length=200)
 	challan_number	= models.IntegerField(unique=True)
 	date			= models.DateField()
