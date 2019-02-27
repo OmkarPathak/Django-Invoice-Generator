@@ -21,7 +21,7 @@ A minimal Inventory Management System using Django
 - Install all dependencies by executing the following command:
 
     ```
-    $pip install -r requirements.txt
+    $pip install -r inventory_management/requirements.txt
     ```
 
 - For running the application simply execute the following commands:
@@ -39,6 +39,8 @@ A minimal Inventory Management System using Django
     ```
 
 - You can now login to the system!
+
+- For first time use, visit [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and under `Works` section select `Challan Number`. Then click on add challan number and add 1 in the textbox and click save. Now you can use the app by visiting [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 
 ### Built with ♥ and :coffee: by [`Omkar Pathak`](http://www.omkarpathak.in/)
