@@ -32,6 +32,8 @@ def generate_pdf(request):
     context = request.GET
     request.session['context'] = context
 
+    print(context)
+
     code            = request.GET.get('code1')
     particular      = request.GET.get('vendor_name1')
     challan_number  = request.GET.get('challan_number')
@@ -62,8 +64,8 @@ def generate_pdf(request):
                 )
         report.save()
 
-        challan = MeltChallanNumber.objects.first()
-        challan.melt_challan_number += 1
+        challan = ChallanNumber.objects.first()
+        challan.challan_number += 1
         challan.save()
     except:
         MeltReport.objects.filter(challan_number=challan_number).delete()
@@ -82,8 +84,8 @@ def generate_pdf(request):
                 )
         report.save()
 
-        challan = MeltChallanNumber.objects.first()
-        challan.melt_challan_number += 1
+        challan = ChallanNumber.objects.first()
+        challan.challan_number += 1
         challan.save()
 
     return redirect('get_pdf')
@@ -93,8 +95,8 @@ def get_pdf(request):
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         filename = "Melt_Invoice_{}.pdf".format(request.session.get('context').get('challan_number'))
-        content = "inline; filename='{}'".format(filename)
-        content = "attachment; filename='{}'".format(filename)
+        content = "inline; filename={}".format(filename)
+        content = "attachment; filename={}".format(filename)
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Not found")
@@ -169,8 +171,8 @@ def get_pdf_assembly(request):
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         filename = "Assembly_Invoice_{}.pdf".format(request.session.get('context').get('challan_number'))
-        content = "inline; filename='{}'".format(filename)
-        content = "attachment; filename='{}'".format(filename)
+        content = "inline; filename={}".format(filename)
+        content = "attachment; filename={}".format(filename)
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Not found")
@@ -202,7 +204,7 @@ def homepage(request):
     return redirect('invoice_generator_assembly')
 
 def invoice_generator_melt(request):
-    challan_number = MeltChallanNumber.objects.get(id=1)
+    challan_number = ChallanNumber.objects.get(id=1)
     works = Work.objects.all().order_by('code')
     hsc   = HSCNumber.objects.all()
     context = {

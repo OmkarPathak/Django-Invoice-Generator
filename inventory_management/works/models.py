@@ -16,13 +16,13 @@ class ChallanNumber(models.Model):
 	'''
 		Assembly Challan Number
 	'''
-	challan_number = models.IntegerField()
+	challan_number = models.IntegerField(default=0)
 
 	def __str__(self):
 		return str(self.challan_number)
 
 class MeltChallanNumber(models.Model):
-	melt_challan_number = models.IntegerField()
+	melt_challan_number = models.IntegerField(default=0)
 
 	def __str__(self):
 		return str(self.melt_challan_number)

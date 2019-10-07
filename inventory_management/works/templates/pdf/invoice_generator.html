@@ -113,14 +113,14 @@ body{
  
 <tr>
    <td colspan="2" style="text-align: right"><b>CGST: </b>{{ cgst }} %<br><b>SGST:</b> {{ sgst }} %</td>
-   <td>-
+   <td>{{ cgst_amount }}<br>{{ sgst_amount }}</td>
    </td>
 </tr>
 
 <tr>
   <td colspan="2"> <b>Total Weight :</b> {% if total_weight %}{{ total_weight }}{% else %}-{% endif %}</td>
   <td colspan="2" style="text-align: right"> <b>Grand Total :</b></td>
-  <td>-</td>
+  <td>{{ grand_total }}</td>
 </tr>
 
 <tr>
