@@ -29,11 +29,9 @@ def generate_pdf(request):
     '''
         Helper function to generate pdf in case of ajax request
     '''
-    context = request.GET
+    context = request.GET.copy()
     request.session['context'] = context
-
-    print(context)
-
+    context['amount_in_words'] = num2words.number_to_words(round(float(context.get('grand_total')), 2)) + ' only'
     code            = request.GET.get('code1')
     particular      = request.GET.get('vendor_name1')
     challan_number  = request.GET.get('challan_number')
@@ -107,8 +105,7 @@ def generate_pdf_assembly(request):
     '''
     context = request.GET.copy()
     context['works'] = json.loads(context['works'])
-    context['amount_in_words'] = num2words.number_to_words(context.get('grand_total')) + ' only'
-    print(context['amount_in_words'])
+    context['amount_in_words'] = num2words.number_to_words(round(float(context.get('grand_total')), 2)) + ' only'
     challan_number = context.get('challan_number')
     hsc_number     = context.get('hsc_number')
     date           = context.get('date')
