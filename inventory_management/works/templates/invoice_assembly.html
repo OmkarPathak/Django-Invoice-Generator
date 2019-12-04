@@ -93,6 +93,10 @@
                     <div class="float-left">
                         <h5 class="value1" style="margin-top: 10%; margin-bottom: 0"></h5>
                     </div>
+                    <br>
+                    <INPUT class="form-control po_number1" TYPE="text" NAME="po_number" placeholder="PO Number">
+                    <br>
+                    <INPUT class="form-control jc_number1" TYPE="text" NAME="jc_number" placeholder="JC Number">
                 </td>            
                 <td>
                     <INPUT class="form-control" TYPE="number" NAME="weight1" placeholder="Weight" onkeyup="get_total_weight(1)">
@@ -230,6 +234,10 @@
                     <div class="float-left">
                         <h5 class="value` + id + `" style="margin-top: 10%; margin-bottom: 0"></h5>
                     </div>
+                    <br>
+                    <INPUT class="form-control po_number` + id + `" TYPE="text" NAME="po_number" placeholder="PO Number">
+                    <br>
+                    <INPUT class="form-control jc_number` + id + `" TYPE="text" NAME="jc_number" placeholder="JC Number">
                 </td>
                 <td>
                     <INPUT class="form-control" TYPE="number" NAME="weight` + id + `" placeholder="Weight"  onkeyup="get_total_weight(` + id + `)">
@@ -297,6 +305,8 @@
                 // alert(data.name);
                 $('.value' + id).text(data.name);
                 $('.amount' + id).text(data.amount);
+                $('.po_number' + id).val(data.po_number);
+                $('.jc_number' + id).val(data.jc_number);
             }
         });
 
@@ -397,6 +407,8 @@
                 code        : $("select[data-id=" + i +"]").val(),
                 vendor_name : $(".value" + i).text(),
                 rate        : $(".amount" + i).text(),
+                po_number   : $(".po_number" + i).val(),
+                jc_number   : $(".jc_number" + i).val(),
                 amount      : $("input[name=amount" + i + "]").val(),
                 quantity    : $("input[name=quantity" + i + "]").val(),
                 weight      : $("input[name=weight" + i + "]").val(),

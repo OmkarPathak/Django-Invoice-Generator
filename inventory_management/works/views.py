@@ -182,7 +182,9 @@ def get_code_values(request):
             'id': work.id,
             'code': work.code,
             'name': work.name,
-            'amount': work.amount
+            'amount': work.amount,
+            'po_number': work.po_number,
+            'jc_number': work.jc_number
         }
         return JsonResponse(data)
 

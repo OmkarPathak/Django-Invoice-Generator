@@ -51,6 +51,8 @@
                     <th scope="col">Code</th>
                     <th scope="col">Name</th>
                     <th scope="col">Amount</th>
+                    <th scope="col">PO Number</th>
+                    <th scope="col">JC Number</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
                   </tr>
@@ -62,6 +64,8 @@
                         <td>{{ work.code }}</td>
                         <td>{{ work.name }}</td>
                         <td>{{ work.amount }}</td>
+                        <td>{{ work.po_number }}</td>
+                        <td>{{ work.jc_number }}</td>
                         <td>
                             <a class="btn btn-primary open-modal" data-url="{% url 'admin_edit' id=work.id %}" style="color: white">Edit</a>
                         </td>

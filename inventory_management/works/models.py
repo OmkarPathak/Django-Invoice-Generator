@@ -8,6 +8,9 @@ class Work(models.Model):
 	name 		= models.CharField(max_length=200)
 	amount 		= models.FloatField()
 	date_added	= models.DateTimeField(auto_now_add=True)
+	po_number	= models.CharField(max_length=1000, blank=True, null=True)
+	jc_number	= models.CharField(max_length=1000, blank=True, null=True)
+
 
 	def __str__(self):
 		return 'Code: ' + self.code + ', Name: ' + self.name
@@ -64,7 +67,7 @@ class QuantityRate(models.Model):
 class AddWorkForm(ModelForm):
 	class Meta:
 		model  = Work
-		fields = ['code', 'name', 'amount']
+		fields = ['code', 'name', 'amount', 'po_number', 'jc_number']
 
 class AddHSCForm(ModelForm):
 	class Meta:
