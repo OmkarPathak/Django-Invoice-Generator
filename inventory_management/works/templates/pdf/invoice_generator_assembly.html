@@ -10,9 +10,8 @@ table, th, td {
     border-collapse: collapse;
 }
 th, td {
-    padding: 8px;
+    padding: 2px;
     text-align: left;
-   
 }
 table#t01 tr:nth-child(even) {
     background-color: #eee;
@@ -27,6 +26,10 @@ table#t01 tr:nth-child(odd) {
 body{
     font-size: 12px;
 }
+h1,h2,h3,h4,h5,h6,p{
+    padding: 0;
+    margin: 0;
+}
 </style>
 </head>
 <body>
@@ -37,23 +40,25 @@ body{
  <tr>
     <th colspan="5" style="text-align: center;">
         <div style="text-align: center">
-            <h3 style="padding-top: 10px">DELIEVERY CHALLAN / INVOICE <span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
-            <h1 style="padding: 0; font-style: 40px;">Vaibhav Engineering works</h1>
-            <h3 style="padding-bottom: 10px">
-                    S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar <span>Email: malivp94@gmail.com</span>
+            <h3 style="padding-top: 5px; margin: 0;">DELIEVERY CHALLAN / INVOICE<span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
+            <p style="padding: 0; font-size: 40px; margin: 0;">Vaibhav Engineering works</p>
+            <p style="padding-bottom: 2px; margin: 0; font-size: 15px;">An ISO 9001:2014 CERTIFICATION</p>
+            <h3 style="padding-bottom: 5px; margin: 0;">
+                    S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar
             </h3>
+            <p style="margin: 0; padding: 0;"><b>Email</b>: malivp94@gmail.com | <b>GSTIN:</b> 27APGPM6700G1ZZ | <b>PAN No:</b> APGPM6700G<br></p>
         </div>
     </th>
  </tr>
 
   <tr>
-    <td colspan = "3"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA</td>
-    <td colspan = "2"><b>GSTIN :</b> 27APGPM6700G1ZZ <br> <b>PAN No :</b> APGPM6700G<br> <b>Your Challan: </b>{{ your_challan }} <br> <b>Dated: </b>{{ dated }}</td>
+    <td colspan = "2"><b>To, M/s:</b> {{ company_name }} <br><b>GSTIN :</b> 27AAACV6873B1ZA</td>
+    <td colspan = "3"><b>Your Challan: </b>{{ your_challan }} <br> <b>Dated: </b>{{ dated }}</td>
   </tr> 
 
   <tr>
-    <td colspan = "3"><b>Invoice No : {{ challan_number }}</b> <b>Date :</b> {{ date }} <br> <b>Vendor No :</b> V0113<br> <b>HSN  / SAC Code : </b>{{ hsc_number }}</td>
-    <td colspan = "2">JC No :</b> {{ jc_number }} </td>
+    <td colspan = "2"><b>Invoice No : {{ challan_number }}</b><br><b>Date :</b> {{ date }}</td>
+    <td colspan = "3"><b>Vendor No :</b> V0113<br> <b>HSN  / SAC Code : </b>{{ hsc_number }}</td>
   </tr>
 
   <tr>
@@ -65,7 +70,10 @@ body{
   </tr>
   {% for work in works %}
   <tr>
-        <td>{{ work.code }}<br>{{ work.vendor_name }}</td>     
+        <td>{{ work.code }}<br>{{ work.vendor_name }}<br>
+            {% if work.po_number %}PO No.: {{ work.po_number }}{% endif %}<br>
+            {% if work.jc_number %}JS No.: {{ work.jc_number }}{% endif %} 
+        </td>     
         <td>{{ work.weight }}<br>{% if work.bags %}{{ work.bags }}{% else %}0{% endif %} Bags/Box</td>
         <td>{{ work.quantity }}</td>
         <td>{{ work.rate }}</td>
@@ -73,25 +81,52 @@ body{
     </tr>
   {% endfor %}
 
-<tr>
-  <td colspan="2" rowspan="2"><br>
-  <b>Melt No.: </b> {{ melt_number }}</td>
-  <td colspan="2" style="text-align: right"><b>Total:</b></td>
-  <td>{{ total }}</td>
-</tr>
- 
-<tr>
-   <td colspan="2" style="text-align: right"><b>CGST: </b>{{ cgst }} %<br><b>SGST:</b> {{ sgst }} %</td>
-   <td>
-      {{ cgst_amount|floatformat }}<br>
-      {{ sgst_amount|floatformat }}
-   </td>
-</tr>
+  <!-- {% if works|length == 1 %}
+    <tr style="border-bottom-style: hidden;">
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+    </tr>
+    <tr style="border-bottom-style: hidden;">
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+    </tr>
+    <tr>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+    </tr>
+  {% endif %}
+
+  {% if works|length == 2 %}
+    <tr style="border-bottom-style: hidden;">
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+    </tr>
+    <tr>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+        <td style="padding-top: 100px;"> </td>
+    </tr>
+  {% endif %} -->
 
 <tr>
-  <td colspan="2"> <b>Total Weight :</b> {{ total_weight }}</td>
-  <td colspan="2" style="text-align: right"> <b>Grand Total :</b></td>
-  <td>{{ grand_total|floatformat }}</td>
+    <td><b>CGST:</b> {{ cgst_amount|floatformat }}
+    <b>SGST:</b> {{ sgst_amount|floatformat }}</td>
+    <td><b>Total:</b> {{ total|floatformat }}</td>
+    <td colspan="3"><b>Grand Total:</b> {{ grand_total|floatformat }}</td>
 </tr>
 
 <tr>
