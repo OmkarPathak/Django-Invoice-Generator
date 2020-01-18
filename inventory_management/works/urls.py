@@ -39,5 +39,6 @@ urlpatterns = [
     path('report/assembly/', views.report_assembly, name='report_assembly'),
     path('report/melt/', views.report_melt, name='report_melt'),
     path('report/stock/melt/', views.stock_report_monthly, name='stock_report_monthly'),
+    path('test', views.test),
     path('', views.admin, name='homepage'),
 ]

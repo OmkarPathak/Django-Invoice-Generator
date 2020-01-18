@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +41,7 @@ h1,h2,h3,h4,h5,h6,p{
  <tr>
     <th colspan="5" style="text-align: center;">
         <div style="text-align: center">
-            <h3 style="padding-top: 5px; margin: 0;">DELIEVERY CHALLAN / INVOICE<span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
+            <h3 style="padding-top: 5px; margin: 0;"><img src="{{ logo }}" style="height: 40px; width: 70px;" align="left"> DELIEVERY CHALLAN / INVOICE<span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
             <p style="padding: 0; font-size: 40px; margin: 0;">Vaibhav Engineering works</p>
             <p style="padding-bottom: 2px; margin: 0; font-size: 15px;">An ISO 9001:2014 CERTIFICATION</p>
             <h3 style="padding-bottom: 5px; margin: 0;">
@@ -57,7 +58,7 @@ h1,h2,h3,h4,h5,h6,p{
   </tr> 
 
   <tr>
-    <td colspan = "2"><b>Invoice No : {{ challan_number }}</b><br><b>Date :</b> {{ date }}</td>
+    <td colspan = "2"><b>Invoice No : <span style="font-size: 20px;">{{ challan_number }}</span></b><br><b>Date :</b> {{ date }}</td>
     <td colspan = "3"><b>Vendor No :</b> V0113<br> <b>HSN  / SAC Code : </b>{{ hsc_number }}</td>
   </tr>
 
