@@ -31,6 +31,9 @@ h1,h2,h3,h4,h5,h6,p{
     padding: 0;
     margin: 0;
 }
+img{
+    float: left;
+}
 </style>
 </head>
 <body>
@@ -41,8 +44,8 @@ h1,h2,h3,h4,h5,h6,p{
  <tr>
     <th colspan="5" style="text-align: center;">
         <div style="text-align: center">
-            <h3 style="padding-top: 5px; margin: 0;"><img src="{{ logo }}" style="height: 40px; width: 70px;" align="left"> DELIEVERY CHALLAN / INVOICE<span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
-            <p style="padding: 0; font-size: 40px; margin: 0;">Vaibhav Engineering works</p>
+            <h3 style="padding-top: 5px; margin: 0;">DELIEVERY CHALLAN / INVOICE<span style="white-space: pre;">               MOB NO :- 9423222798 & 9881212348</span></h3>
+            <p style="padding: 0; font-size: 40px; margin: 0;"><img src="{{ logo }}" style="height: 40px; width: 70px; margin-left: 30px;"> Vaibhav Engineering works</p>
             <p style="padding-bottom: 2px; margin: 0; font-size: 15px;">An ISO 9001:2014 CERTIFICATION</p>
             <h3 style="padding-bottom: 5px; margin: 0;">
                     S.No.15/11/3, Old Warje Jakat Naka, Behind Kakde City, Karvanagar
@@ -124,8 +127,8 @@ h1,h2,h3,h4,h5,h6,p{
   {% endif %} -->
 
 <tr>
-    <td><b>CGST:</b> {{ cgst_amount|floatformat }}
-    <b>SGST:</b> {{ sgst_amount|floatformat }}</td>
+    <td><b>CGST ({{ cgst }} %):</b> {{ cgst_amount|floatformat }}<br>
+    <b>SGST ({{ sgst }} %):</b> {{ sgst_amount|floatformat }}</td>
     <td><b>Total:</b> {{ total|floatformat }}</td>
     <td colspan="3"><b>Grand Total:</b> {{ grand_total|floatformat }}</td>
 </tr>

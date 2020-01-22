@@ -11,6 +11,7 @@ import time, json, calendar, inflect
 from django.db.models import Q
 from xlsxwriter.workbook import Workbook
 from django.conf import settings
+import datetime
 import os
 
 num2words = inflect.engine()
@@ -23,7 +24,6 @@ def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html  = template.render(context_dict)
     result = BytesIO()
-    print(html)
     pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
@@ -61,6 +61,8 @@ def generate_pdf(request):
     '''
     context = request.GET.copy()
     request.session['context'] = context
+    context['date'] = datetime.datetime.strptime(context.get('date'), '%Y-%m-%d').strftime('%d-%m-%Y')
+    context['dated'] = datetime.datetime.strptime(context.get('dated'), '%Y-%m-%d').strftime('%d-%m-%Y')
     context['amount_in_words'] = num2words.number_to_words(round(float(context.get('grand_total')), 2)) + ' only'
     code            = request.GET.get('code1')
     particular      = request.GET.get('vendor_name1')
@@ -189,7 +191,8 @@ def generate_pdf_assembly(request):
             quant.report.add(report)
         else:
             del context.get('works')[index]
-
+    context['date'] = datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%d-%m-%Y')
+    context['dated'] = datetime.datetime.strptime(context.get('dated'), '%Y-%m-%d').strftime('%d-%m-%Y')
     request.session['context'] = context
     return redirect('get_pdf_assembly')
 
@@ -762,4 +765,7 @@ def stock_report_monthly(request):
     return render(request, 'stock_report.html', {'form': form})
 
 def test(request):
-    return render(request, 'pdf/invoice_generator_assembly.html')
+    from django.contrib.staticfiles.templatetags.staticfiles import static
+    context_dict = {}
+    context_dict['logo'] = static('vew.jpeg')
+    return render(request, 'pdf/invoice_generator_assembly.html', context_dict)
