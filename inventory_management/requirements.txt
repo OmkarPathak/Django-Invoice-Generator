@@ -1,5 +1,5 @@
 astroid==2.0
-Django==2.0.12
+Django==2.2.10
 django-crispy-forms==1.7.2
 django-easy-pdf==0.1.1
 et-xmlfile==1.0.1
