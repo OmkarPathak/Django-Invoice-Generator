@@ -4,7 +4,7 @@ django-crispy-forms==1.7.2
 django-easy-pdf==0.1.1
 et-xmlfile==1.0.1
 html5lib==1.0.1
-httplib2==0.11.3
+httplib2==0.18.0
 inflect==0.3.1
 isort==4.3.4
 jdcal==1.4
